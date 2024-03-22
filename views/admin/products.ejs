@@ -1,0 +1,119 @@
+<%- include('../layouts/adminheader.ejs') %>
+
+  <div class="container-scroller">
+
+    <%- include('../layouts/adminsidebar.ejs') %>
+
+    <div class="container-fluid page-body-wrapper">
+
+        <%- include('../layouts/adminnavbar.ejs') %>
+
+      <!-- partial -->
+
+        <div class="main-panel">
+
+          <div class="content-wrapper">
+            
+              <div class="d-flex justify-content-center">
+                <a href="/admin/addProducts"><button class="btn btn-success">Add New Products</button></a>
+              </div>
+              <div class="d-flex justify-content-center">
+                <table class="m-5 table table-bordered" width="100%">
+                    <thead >
+                      <tr class="">
+                        <th class="px-5 text-success table table-bordered">No</th> 
+                        <th class="px-5 text-success table table-bordered">Name</th >
+                        <th class="px-5 text-success table table-bordered">Images</th >
+                        <th class="px-5 text-success table table-bordered">Price</th >
+                        <th class="px-5 text-success table table-bordered">QTY</th> 
+                        <th class="px-5 text-success table table-bordered">Catogory</th> 
+                        <th class="px-5 text-success table table-bordered">Status</th> 
+                        <th class="px-5 text-success table table-bordered">Edit</th> 
+                      </tr>
+                    </thead>
+                    <tbody style="border: 1px white;">
+                        <%
+                            if(products.length>0){
+                                for(let i=0; i<products.length; i++){
+                                    %>
+                                        <tr>
+                                            <td class="px-5 table table-bordered"><%= i+1 %></td>
+                                            <td class="px-5 table table-bordered"><%= products[i].productName %></td>
+                                            <td class="px-5 table table-bordered">
+                                              <%
+                                              for(let j=0; j<products[i].productImage.length; j++){
+                                                %>
+                                                <img src="/productImage/<%= products[i].productImage[j] %>" alt="product image" width="30px" height="30px" style="border-radius: 50%;">
+                                                <%
+                                              }
+                                              %>
+                                            </td>
+                                            <td class="px-5 table table-bordered"><%= products[i].price %></td>
+                                            <td class="px-5 table table-bordered"><%= products[i].quantity %></td>
+                                            <td class="px-5 table table-bordered"><%= products[i].catogory %></td>
+                                            <td class="px-5 table table-bordered"><%= products[i].status %></td>
+                                            <td class="px-5 table table-bordered">
+                                              <!-- Using <button> element -->
+                                                    <div class="dropdown">
+                                                      <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                          Actions
+                                                      </button>
+                                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                          <a  href="/admin/productedit?id=<%= products[i]._id %>"><button class="btn btn-info m-2 p-2" type="submit">Edit</button></a>
+
+                                                          <br>
+
+                                                          <%
+                                              
+                                                          if( products[i].status==true ){
+                                                            %>
+                                                            <a href="/admin/productunlist?id=<%= products[i]._id %>"><button class="btn btn-danger m-2 p-2" type="submit">Unlist</button></a>
+                                                            <%
+                                                          }
+                                                          else{
+                                                            %>
+                                                            <a href="/admin/productlist?id=<%= products[i]._id %>"><button class="btn btn-success m-2 p-2" type="submit">List</button></a>
+                                                            <%
+                                                          }
+                                                          %>
+                                                          <br>
+
+                                                          <a  href="/admin/deleteproduct?id=<%= products[i]._id %>"><button class="btn btn-danger m-2 p-2" type="submit">Delete</button></a>
+                                                      </div>
+                                                    </div>
+                                            </td>
+                                             
+                                     <%
+                                }
+                            }
+                            else{
+                                %>
+                                    <tr>
+                    
+                                        <td>No Products Added , please add !!!</td>
+                    
+                                    </td>
+                                <%
+                            }
+                    
+                    
+                        %>
+                    </tbody>
+                      </table>
+              </div>
+           
+
+          </div>
+
+        </div>
+
+    </div>
+
+</div> <!--End container scroller-->
+
+
+
+
+
+
+<%- include('../layouts/adminfooter.ejs') %>

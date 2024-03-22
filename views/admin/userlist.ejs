@@ -1,0 +1,90 @@
+<%- include('../layouts/adminheader.ejs') %>
+
+  <div class="container-scroller">
+
+    <%- include('../layouts/adminsidebar.ejs') %>
+
+    <div class="container-fluid page-body-wrapper">
+
+        <%- include('../layouts/adminnavbar.ejs') %>
+
+      <!-- partial -->
+
+        <div class="main-panel">
+
+          <div class="content-wrapper">
+            
+            <h1 class="text-center text-success fw-bold text-decoration-underline">User's List</h1>
+
+            
+        <table class="m-5" width="">
+            <thead>
+            <tr class="">
+                <th class="px-5 text-success">Sl.No</th> 
+                <th class="px-5 text-success">Full Name</th >
+                <th class="px-5 text-success">Email</th> 
+                <th class="px-5 text-success">Actions</th> 
+                <th class="px-5 text-success">Blocked</th> 
+            </tr>
+            </thead>
+        
+            <tbody id="td">
+            <%
+                if(users.length>0){
+                    for(let i=0; i<users.length; i++){
+                        %>
+                            <tr>
+                                <td class="px-5"><%= i+1 %></td>
+                                <td class="px-5"><%= users[i].fullName %></td>
+                                <td class="px-5"><%= users[i].email %></td>
+                                <td class="px-5">
+                                    <%
+                                    if(users[i].is_blocked == true){
+                                        %>
+                                        <a href="/admin/unblock?id=<%= users[i]._id %>"><button class="btn btn-danger px-4 mx-2" type="submit">Unblock</button></a>
+                                        <%
+                                    }
+                                    else{
+                                        %>
+                                            <a href="/admin/block?id=<%= users[i]._id %>"><button class="btn btn-info px-4 mx-2" type="submit">Block</button></a>
+                                        <%
+                                    }
+                                    %>
+                                    
+                                    
+                                </td>
+                                <td class="px-5"><%= users[i].is_blocked %></td>
+                            </tr>
+                        <%
+                    }
+                }
+                else{
+                    %>
+                        <tr>
+        
+                            <td>users not found</td>
+        
+                        </td>
+                    <%
+                }
+        
+        
+            %>
+        </div>
+        
+           
+
+          </div>
+
+        </div>
+
+    </div>
+
+</div> <!--End container scroller-->
+
+
+
+
+
+
+<%- include('../layouts/adminfooter.ejs') %>

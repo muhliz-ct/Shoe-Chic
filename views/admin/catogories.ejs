@@ -1,0 +1,185 @@
+<%- include('../layouts/adminheader.ejs') %>
+
+<div class="container-scroller">
+  <%- include('../layouts/adminsidebar.ejs') %>
+  <div class="container-fluid page-body-wrapper">
+    <%- include('../layouts/adminnavbar.ejs') %>
+    <!-- partial -->
+    <div class="main-panel">
+      <div class="content-wrapper">
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-info px-4 mx-2" type="button" data-toggle="modal" data-target="#addBrand">Add Brand</button>
+          <!-- modal for adding new brand -->
+          <div class="modal fade" id="addBrand" tabindex="-1" role="dialog" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="addBrandModalLabel">Edit Category Name</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- Form for adding new category -->
+                  <form action="/admin/addBrand" method="post">
+                    <div class="form-group">
+                      <label for="categoryName">Brand name</label>
+                      <input type="text" name="brand" class="form-control" id="categoryName" placeholder="enter the brand name">
+                      <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+                    </div>
+                    <!-- Add more fields if needed -->
+                    <!-- For example, description, etc. -->
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div
+           <!-- Button to trigger modal -->
+          <button class="btn btn-info px-4 mx-2" type="button" data-toggle="modal" data-target="#addCategoryModal">Add New Category</button>
+        </div>
+        <div class="d-flex justify-content-center">
+          <table class="m-5" width="">
+            <thead>
+              <tr class="">
+                <th class="px-5 text-success">Sl.No</th> 
+                <th class="px-5 text-success">Category</th >
+                <th class="px-5 text-success">List</th> 
+                <th class="px-5 text-success">Edit</th> 
+                <th class="px-5 text-success">Status</th> 
+              </tr>
+            </thead>
+            <tbody id="td">
+                <%
+                    if(categoryData.length>0){
+                        for(let i=0; i<categoryData.length; i++){
+                            %>
+                                <tr>
+                                    <td class="px-5"><%= i+1 %></td>
+                                    <td class="px-5"><%= categoryData[i].categoryName %></td>
+                                    <td class="px-5">
+                                      <%
+                                      
+                                      if( categoryData[i].is_listed==true ){
+                                        %>
+                                        <a href="/admin/unlist?name=<%= categoryData[i].categoryName %>"><button class="btn btn-danger px-4" type="submit">Unlist</button></a>
+                                        <%
+                                      }
+                                      else{
+                                        %>
+                                        <a href="/admin/list?name=<%= categoryData[i].categoryName %>"><button class="btn btn-success px-4" type="submit">List</button></a>
+                                        <%
+                                      }
+
+                                      %>
+                                      
+                                      
+                                    </td>
+                                    <td class="px-5"><button class="btn btn-info px-4 mx-2" type="button" data-toggle="modal" data-target="#editCategoryModal<%= i %>">Edit</button></a>
+                                            <!-- Modal Edit Category -->
+                                            <div class="modal fade" id="editCategoryModal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                                              <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="modal-title" id="addCategoryModalLabel">Edit Category Name</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    <!-- Form for adding new category -->
+                                                    <form action="/admin/editCategory?currentName=<%= categoryData[i].categoryName %>" method="post">
+                                                      <div class="form-group">
+                                                        <label for="categoryName">Category Name</label>
+                                                        <input type="text" name="category" class="form-control" id="categoryName" placeholder="<%= categoryData[i].categoryName %>">
+                                                        <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+                                                      </div>
+                                                      <!-- Add more fields if needed -->
+                                                      <!-- For example, description, etc. -->
+                                                    </form>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                    </td>
+                                    <td class="px-5"><%= categoryData[i].is_listed %></td>
+                                </tr>
+                            <%
+                        }
+                    }
+                    else{
+                        %>
+                            <tr>
+            
+                                <td>No Catogory Found</td>
+            
+                            </td>
+                        <%
+                    }
+            
+            
+                %>
+              </table>
+        </div>
+        <%
+                if(locals.duplicateCategoryMsg||locals.brandMsg){
+                  %>
+                  <p class="text-danger text-center" id="s"><%= duplicateCategoryMsg %></p>
+                  <%
+                }
+              %>
+              <%
+                if(locals.catMessage){
+                  %>
+                  <p class="text-danger text-center" id="s"><%= catMessage %></p>
+                  <%
+                }
+              %>
+      </div>
+    </div>
+  </div>
+</div> <!--End container scroller-->
+
+<!-- Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for adding new category -->
+        <form action="/admin/addCategory" method="post">
+          <div class="form-group">
+            <label for="categoryName">Category Name</label>
+            <input type="text" name="category" class="form-control" id="categoryName" placeholder="Enter category name">
+            <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+          </div>
+          <!-- Add more fields if needed -->
+          <!-- For example, description, etc. -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const s = document.getElementById('s')
+  console.log(s.textContent);
+</script>
+
+<%- include('../layouts/adminfooter.ejs') %>
