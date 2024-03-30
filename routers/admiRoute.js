@@ -11,6 +11,7 @@ const adminController = require('../controllers/adminController');
 const categoryController = require('../controllers/categoryController');
 const brandController = require('../controllers/brandController');
 const productController = require('../controllers/productController');
+const orderController = require('../controllers/orderController')
 const multer = require('../middlewares/multer');
 const adminAuth = require('../middlewares/adminAuth');
 
@@ -27,7 +28,7 @@ adminRoute.get('/category',adminAuth.isLogin,categoryController.loadCatogeries)
 adminRoute.post('/addCategory',adminAuth.isLogin,categoryController.addCategory)
 adminRoute.get('/list',adminAuth.isLogin,categoryController.listCategory);
 adminRoute.get('/unlist',adminAuth.isLogin,categoryController.unlistCategory);
-adminRoute.post('/editCategory',adminAuth.isLogin,categoryController.unlistCategory);
+adminRoute.post('/editCategory',adminAuth.isLogin,categoryController.editCategory);
 
 
 adminRoute.post('/addBrand',adminAuth.isLogin,brandController.addnewBrand);
@@ -46,6 +47,9 @@ adminRoute.get('/productunlist',adminAuth.isLogin,productController.unlistProduc
 adminRoute.get('/deleteproduct',adminAuth.isLogin,productController.deleteProduct);
 adminRoute.get('/productedit',productController.loadEditProduct);
 adminRoute.post('/producteditt', multer.upload.fields([{ name: 'image0', maxCount: 1 }, { name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), productController.editProduct);
+
+
+adminRoute.get('/orders',orderController.listOrders)
 
 
 

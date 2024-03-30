@@ -3,38 +3,53 @@ const category = require('../models/categoryModel');
 const brand = require('../models/brandModel');
 const path = require('path')
 const fs = require('fs');
-const { log } = require('console');
+const errorHandler = require('../middlewares/errorHandler');
 
+// showing all products
 const loadProducts = async(req,res)=>{
     try {
         const productData = await product.find({productName:{$exists:true}});
+
         res.render('products',{products:productData})
+
     } catch (error) {
+
         console.error(error.message);
+
+        errorHandler(error, req, res);
+
     }
 }
 
-
+// loading the page for adding new products at admin side
 const loadAddProducts = async(req,res)=>{
     try {
+
         const listCategory = await category.find({categoryName:{$exists:true}});
+
         const existingBrands = await brand.find({brandName:{$exists:true}});
-        res.render('addProducts',{listcategory:listCategory,brands:existingBrands})
+
+        res.render('addProducts',{listcategory:listCategory,brands:existingBrands});
+
     } catch (error) {
+
         console.error(error.message);
+
+        errorHandler(error, req, res);
     }
 }
 
+// saving a new product from admin side
 const addProducts = async(req,res)=>{
     try {
+
         let images = [];
+
         const image = req.files;
 
         image.forEach((file) => {
             images.push(file.filename)
         });
-
-
 
 
         const newProduct = product.create({
@@ -50,83 +65,124 @@ const addProducts = async(req,res)=>{
 
         })
 
-        // await newProduct.save();
+
 
         res.redirect('/admin/products');
+
     } catch (error) {
+
         console.error(error.message);
+
+        errorHandler(error, req, res);
+
     }
 }
 
-
+// listing products in admin side
 const listProduct = async(req,res)=>{
     try {
+
         const productId = req.query.id;
+
         await product.findOneAndUpdate({_id:productId},{$set:{status:true}});
+
         res.redirect('/admin/products');
+
     } catch (error) {
+
         console.error(error.message);
+
+        errorHandler(error, req, res);
     }
 }
 
-
+// unlisting products in admin side
 const unlistProduct = async(req,res)=>{
     try {
+
         const productId = req.query.id;
+
         await product.findOneAndUpdate({_id:productId},{$set:{status:false}});
-        res.redirect('/admin/products')
+
+        res.redirect('/admin/products');
+
     } catch (error) {
-        console.error(error.message)
+
+        console.error(error.message);
+
+        errorHandler(error, req, res);
     }
 }
 
 
-
+// delete product from admin side 
 const deleteProduct = async(req,res)=>{
     try {
+
         const itemToBeDeleted = req.query.id;
+
         console.log(itemToBeDeleted);
-        await product.findByIdAndDelete({_id:itemToBeDeleted})
-        res.redirect('/admin/products')
+
+        await product.findByIdAndDelete({_id:itemToBeDeleted});
+
+        res.redirect('/admin/products');
 
     } catch (error) {
-        console.error(error.message)
+
+        console.error(error.message);
+
+        errorHandler(error, req, res);
     }
 }
 
 
 
-
+// load edit product in admin side
 const loadEditProduct = async(req,res)=>{
     try {
         const itemToBeEdited = req.query.id;
-        console.log(itemToBeEdited);
-        // const brandDetails = await brand.find({brandName:{$exists:true}})
-        // const catogoryDetails = await category.find({categoryName:{$exists:true}})
+
+        const catData = await category.find({categoryName:{$exists:true}});
+
+        const brandData = await brand.find({brandName:{$exists:true}});
+
+        // console.log(itemToBeEdited);
+
+        // const brandDetails = await brand.find({brandName:{$exists:true}});
+
+        // const catogoryDetails = await category.find({categoryName:{$exists:true}});
+
         const productsDetails = await product.findOne({_id:itemToBeEdited});
 
-        console.log(productsDetails);
+        // console.log(productsDetails);
 
-        res.render('editProduct',{ productData:productsDetails});
+        res.render('editProduct',{ productData:productsDetails , listcategory:catData , brands:brandData});
 
     } catch (error) {
-        console.log(error.message)
+
+        console.log(error.message);
+
+        errorHandler(error, req, res);
     }
 }
 
-
+// saving the edited product to db in admin side
 const editProduct = async(req,res)=>{
     try {
-        console.log(req.files)
-        const productId = req.query.id;
-        console.log(productId);
-        const editProductt = await product.findOne({_id:productId})
 
-        console.log(editProductt);
+        // console.log(req.files);
+
+        const productId = req.query.id;
+
+        // console.log(productId);
+
+        const editProductt = await product.findOne({_id:productId});
+
+        // console.log(editProductt);
         
         let imag = [];
 
-        console.log("jjj");
+        // console.log("jjj");
 
         for (let i = 0; i < 3; i++) {
 
@@ -139,6 +195,7 @@ const editProduct = async(req,res)=>{
             } else {
 
                 imag.push(req.files[`image${i}`][0].filename);
+
                 fs.unlinkSync(path.join(__dirname, '../public/productImage', editProductt.productImage[i]));
                 
             }
@@ -147,12 +204,32 @@ const editProduct = async(req,res)=>{
 
         editProductt.productImage = imag;
 
-        await product.findByIdAndUpdate({_id:productId},{$set:{productName:req.body.name,price:req.body.price,offerprice:req.body.offerprice,quantity:req.body.stock,description:req.body.description}});
-        res.redirect('/admin/products')
-        editProductt.save()
+        await product.findByIdAndUpdate({_id:productId},{$set:{productName:req.body.name,price:req.body.price,offerprice:req.body.offerprice,quantity:req.body.stock,description:req.body.description,catogory:req.body.category,brand:req.body.brand}});
+
+        res.redirect('/admin/products');
+
+        editProductt.save();
+
 
     } catch (error) {
-        console.error(error.message)
+
+        console.error(error.message);
+
+        errorHandler(error, req, res);
+    }
+}
+
+
+const searchProduct = async(req,res)=>{
+    try {
+        console.log(req.body);
+        const findProduct = req.body.data
+        const searchedItem = await product.find({ productName: { $regex: new RegExp(`.*${findProduct}.*`, 'i') } });
+        console.log(searchedItem);
+        res.send(searchedItem);
+
+    } catch (error) {
+        errorHandler(error, req, res)
     }
 }
 
@@ -172,4 +249,5 @@ module.exports = {
     deleteProduct,
     loadEditProduct,
     editProduct,
+    searchProduct
 }

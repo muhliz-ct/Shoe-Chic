@@ -8,12 +8,20 @@ userRoute.set('views','./views/user');
 
 const auth = require('../middlewares/auth');
 
-const userAuth = require('../middlewares/userAuth')
+const userAuth = require('../middlewares/userAuth');
+
+const googleLogin = require('../passport');
 
 
 const userController = require('../controllers/usercontroller');
 
-const cartController = require('../controllers/cartController')
+const cartController = require('../controllers/cartController');
+
+const addressController = require('../controllers/addressController');
+
+const orderController = require('../controllers/orderController');
+
+const productController = require('../controllers/productController');
 
 userRoute.get('/',auth.checkBlockUser,userController.loadHome);//home page route
 
@@ -50,15 +58,50 @@ userRoute.get('/productdetails',userController.loadProductDetails);
 
 userRoute.get('/cart',cartController.loadCart);
 userRoute.post('/addtocart',cartController.addToCart);
-userRoute.post('/deletecart',cartController.deleteItemFromCart)
-
+userRoute.post('/deletecart',cartController.deleteItemFromCart);
+userRoute.put('/cartUpdate',cartController.editCart);
 
 userRoute.get('/forgotpassword',userController.forgotPassword);
 userRoute.post('/forgotpasswordotp',userController.forgotPasswordOtp);
 userRoute.post('/passwordVerify',userController.changeForgotPassword);
 
 
-userRoute.get('/checkout',userController.loadCheckout)
+userRoute.get('/checkout',userController.loadCheckout);
+userRoute.post('/verifyChekutAdss',addressController.saveAddress);
+
+
+
+userRoute.post('/addaddresses',addressController.addAddress);
+userRoute.post('/deleteAdd',addressController.deleteAddress);
+userRoute.post('/verifyEditAddress',addressController.editCurrentAddress)
+userRoute.put('/editAddress',addressController.editAddress);
+userRoute.post('/chooseAddress',addressController.chooseAddress);
+
+
+
+userRoute.post('/getOrder',orderController.placeOrder);
+
+
+userRoute.get('/orders',orderController.loadOrder);
+
+
+
+
+//Login With Google
+userRoute.get('/auth/google', googleLogin.googleAuth);
+
+
+userRoute.get("/auth/google/callback", googleLogin.googleCallback, googleLogin.setupSession);
+
+
+userRoute.put('/searchProduct',productController.searchProduct)
+
+
+
+
+
+
+
 
 
 

@@ -43,19 +43,19 @@
 					
 					<div class="row">
 						
-						<% for (let i = 0; i < addres?.address?.length; i++) { %>
+						<% for (let i = 0; i < addres?.addresss?.length; i++) { %>
 							
-							<% if (addres?.address[i]?.status == false) { %>
+							<% if (addres?.addresss[i]?.status == false) { %>
                                                                                                                                                                                                                                                                                
 								<div class="col-lg-5" style="margin: auto;">
 
-									<div class="card card-dashboard mt-2 style" style="width: 100;box-shadow:1px 1px 4px 0px#888888;" onclick="addresChoose('<%= addres.address[i]._id %>')">
+									<div class="card card-dashboard mt-2 style" style="width: 100;box-shadow:1px 1px 4px 0px#888888;" onclick="addresChoose('<%= addres.addresss[i]._id %>')">
 													
 										<div class="card-body" style="cursor: pointer;">
 
 												<!-- <input type="checkbox" class="card-checkbox"> -->
 
-												<!-- <button type="button" class="close" aria-label="Close"  style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAdd('<%= userData %>' , '<%= addres.address[i]._id %>')">
+												<!-- <button type="button" class="close" aria-label="Close"  style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAdd('<%= userData._id %>' , '<%= addres.addresss[i]._id %>')">
 													<span aria-hidden="true">&times;</span>
 												</button> -->
 
@@ -63,17 +63,17 @@
 
 												<h3 class="card-title">Address</h3><!-- End .card-title -->
 
-												<p><span style="font-size: 1vw;"><%= addres.address[i].name %></span></p>
-												<p><span><%= addres.address[i].address %></span>,
-												<br><span><%= addres.address[i].locality %>,</span>
-												<span><%= addres.address[i].city %>,</span>
-												<span><%= addres.address[i].state %>,</span>
-												<span><%= addres.address[i].pincode %> </span>
+												<p><span style="font-size: 1vw;"><%= addres.addresss[i].name %></span></p>
+												<p><span><%= addres.addresss[i].address %></span>,
+												<br><span><%= addres.addresss[i].locality %>,</span>
+												<span><%= addres.addresss[i].city %>,</span>
+												<span><%= addres.addresss[i].state %>,</span>
+												<span><%= addres.addresss[i].pincode %> </span>
 												<br>
-												<span>Phone: <%= addres.address[i].phone %> </span>
+												<span>Phone: <%= addres.addresss[i].phone %> </span>
 											</p>
 
-											<a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="editAddress('<%= addres.address[i]._id %>')">Edit<i class="icon-edit"></i></a>
+											<a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="editAddress('<%= addres.addresss[i]._id %>')">Edit<i class="icon-edit"></i></a>
 
 										</div><!-- End .card-body -->
 
@@ -81,7 +81,7 @@
 
 								</div><!-- End .col-lg-6 -->
 
-							<%	} else if(addres.address.length <= 1) { %>
+							<%	} else if(addres.addresss.length <= 1) { %>
 
 								<div class="p-3">
 
@@ -118,7 +118,7 @@
             				</form>
             			</div><!-- End .checkout-discount -->
 
-						<% if (!locals.addres || locals.addres.address.length == 0) { %>
+						<% if (!locals.addres || locals.addres.addresss.length == 0) { %>
 
 						  			<!-- Modal For Address Add-->
 
@@ -136,7 +136,7 @@
 
                                                 <form method="post" style="padding-left: 15px;padding-right: 15px;" id="addform">
 
-											      <p id="msg" hidden ></p>
+											      <p id="msg" hidden ><%= msgg %></p>
                                                   
                                                   <div class="row">
 
@@ -189,7 +189,7 @@
 
                                               <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" onclick="addAddress('<%= userData %>')" >Add</button>
+                                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" onclick="addAddress('<%= userData._id %>')" >Add</button>
                                               </div>
 
                                             </div>
@@ -296,9 +296,9 @@
 
                                     <div class="row">
 										
-								     <% for (let i = 0; i < addres.address.length; i++) { %>
+								     <% for (let i = 0; i < addres.addresss.length; i++) { %>
 
-										<% if (addres.address[i].status == true) { %>
+										<% if (addres.addresss[i].status == true) { %>
 
                                                                                                                                                                                                                                                                                
                                          <div class="col-lg-5">
@@ -309,7 +309,7 @@
 
 											  <!-- <input type="checkbox" class="card-checkbox mb-2 "> -->
 
-													<!-- <button type="button" class="close" aria-label="Close"  style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAdd('<%= userData._id %>' , '<%= addres.address[i]._id %>')">
+													<!-- <button type="button" class="close" aria-label="Close"  style="font-size: 23px;padding-bottom: 20px;" onclick="deleteAdd('<%= userData._id %>' , '<%= addres.addresss[i]._id %>')">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button> -->
 
@@ -317,17 +317,17 @@
 
                                                     <h3 class="card-title">Address</h3><!-- End .card-title -->
 
-                                                   <p><span style="font-size: 1vw;"><%= addres.address[i].name %></span></p>
-													<p><span><%= addres.address[i].address %></span>,
-														<br><span><%= addres.address[i].locality %>,</span>
-														<span><%= addres.address[i].city %>,</span>
-														<span><%= addres.address[i].state %>,</span>
-														<span><%= addres.address[i].pincode %> </span>
+                                                   <p><span style="font-size: 1vw;"><%= addres.addresss[i].name %></span></p>
+													<p><span><%= addres.addresss[i].address %></span>,
+														<br><span><%= addres.addresss[i].locality %>,</span>
+														<span><%= addres.addresss[i].city %>,</span>
+														<span><%= addres.addresss[i].state %>,</span>
+														<span><%= addres.addresss[i].pincode %> </span>
 														<br>
-														<span>Phone: <%= addres.address[i].phone %> </span>
+														<span>Phone: <%= addres.addresss[i].phone %> </span>
 													</p>
 
-												    <a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="editAddress('<%= addres.address[i]._id %>')">Edit<i class="icon-edit"></i></a>
+												    <a herf="#" style="cursor: pointer; color: rgb(207, 149, 77);" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="editAddress('<%= addres.addresss[i]._id %>')">Edit<i class="icon-edit"></i></a>
 
                                                  </div><!-- End .card-body -->
 
@@ -354,7 +354,7 @@
 
                                                         <form action="verifyEditAddCheckout" method="post" style="padding-left: 15px;padding-right: 15px;" id="">
 
-												         <p class="" hidden id="msg"></p>
+												         <p class="" hidden id="msg"><%= msgg %></p>
 
                                                         <div class="row">
 
@@ -515,7 +515,7 @@
 		                					</thead>
 
 											<tbody>
-                                                    <% cartData?.products.forEach((product, index)=> { %>
+                                                    <% cartData.products.forEach((product, index)=> { %>
 
                                                         <tr>
 
@@ -680,13 +680,6 @@
     <script src="assets/js/main.js"></script>
 
 
-
-
-
-
-
-
-
 <script>
   
   //  Add Address Section :-
@@ -696,7 +689,6 @@
       const form = document.getElementById('addform');
 
       const formData = new FormData(form)
-	  console.log(formData);
       const addressData = {}
       
       formData.forEach((value , key) => {
@@ -704,9 +696,8 @@
         addressData[key] = value;
         
       });
-	  console.log(JSON.stringify({addressData}));
 
-    fetch(`/verifyChekutAdss?id=${id}` , {method : 'post' , headers : {'Content-Type' : 'application/json'} , body:JSON.stringify({addressData})})
+    fetch(/verifyChekutAdss?id=${id} , {method : 'post' , headers : {'Content-Type' : 'application/json'} , body:JSON.stringify({addressData})})
 
     .then(res => res.json()).then(data => {
 
@@ -750,7 +741,7 @@
 
 function deleteAdd(id , addId){
 
-	fetch(`/deleteCheckAdd?id=${id}&&userid=${addId}`, {method : 'post'})
+	fetch(deleteCheckAdd?id=${id}&&userid=${addId} , {method : 'post'})
 
   .then(data =>{
 
@@ -830,7 +821,7 @@ function editAddress(edit){
 
 function addresChoose(id){
 
-	fetch(`/chooseAddress?id=${id}` , {method : 'post' , headers : {'Content-Type': 'application/json'}})
+	fetch(/chooseAddress?id=${id} , {method : 'post' , headers : {'Content-Type': 'application/json'}})
 
 	window.location.href = '/checkout'
 

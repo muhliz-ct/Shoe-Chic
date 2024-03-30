@@ -82,15 +82,16 @@
 																	<input type="number" class="form-control"
 
 																		oninput="cartUpdate(this,'<%=product.productId.price %>','<%= product.productId._id  %>','<%= locals.cartData._id%>')"
+
 																		value="<%= product.quantity %>" min="1"
-																		max="<%=product.productId.stock%>" step="1"
+																		max="<%=product.productId.quantity%>" step="1"
 																		data-decimals="0" required>
 
 																</div>
 
 															</td>
 
-															<td class="total-col "id='price<%= product.productId._id  %>'>$<%= product.price %></td>
+															<td class="total-col" name="eprice" id='price<%= product.productId._id %>'>$<%= product.price %></td>
 
 															<td class="remove-col">
 
@@ -264,31 +265,29 @@
 
 	//	Update Cart Put :-
 
-	function cartUpdate(e,price,i,id){
+	function cartUpdate(e,price,proId,cartId){
 
-        const Tprice= document.getElementById(`price${i}`)
-        const Total= document.getElementById('total');
-        const sub_total= document.getElementById('sub-total')
-                  
-        fetch('/cartUpdate',{
+			const Tprice= document.getElementById(`price${proId}`)
+			const Total= document.getElementById('total')
+			const sub_total= document.getElementById('sub-total')
+					
+			fetch('/cartUpdate',{
 
-            method: 'PUT',
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ quantity: e.value, id, i })
+				method: 'PUT',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ quantity: e.value,cartId,proId })
 
+			}).then(res=>res.json()).then(data=>{
 
-        }).then(res=>res.json()).then(data=>{
+				if(data.success){
 
-            if(data.success){
-
-                Tprice.textContent=`$${e.value*price}`;
-                Total.textContent=`$${data.success}`;
-                sub_total.textContent=`$${data.success}`;
-                        
-            }
-        })
-    };
-
+					Tprice.textContent=`$${e.value * price}`;
+					Total.textContent=`$${data.success}`;
+					sub_total.textContent=`$${data.success}`;
+							
+				}
+			})
+};
 </script>
 
 <%- include('../layouts/footer') %>

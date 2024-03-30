@@ -72,6 +72,7 @@
 												<a href="/resendOtp" id="resendLink" style="display: none;">Resend OTP</a>
 
 											</div>
+											<p><%= otpMismatch %></p>
 							    	</form>
 							    	
 							    </div><!-- .End .tab-pane -->
@@ -145,6 +146,7 @@
 
 <script>
 	let remainingTime = 60;
+	console.log(remainingTime);
 	console.log("Remaining Time:", remainingTime); // Check if remainingTime is correctly passed
 											
 	// Function to update the timer display
