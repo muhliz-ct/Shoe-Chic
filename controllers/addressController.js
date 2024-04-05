@@ -70,8 +70,8 @@ const addAddress = async(req,res)=>{
         const userId = req.query.id;
 
         const addressData = req.body.addressData;
-
-        // console.log(addressData);
+        
+        console.log(addressData);
 
         const exists = await address.findOne({userId:userId,"address.address":req.body.addressData.addresss});
 
@@ -88,8 +88,8 @@ const addAddress = async(req,res)=>{
                 phone:req.body.addressData.phone,
                 city:req.body.addressData.city,
                 state:req.body.addressData.state,
-                pinconde:req.body.addressData.pinconde,
-                address:req.body.addressData.address,
+                pincode:req.body.addressData.pincode,
+                address:req.body.addressData.addresss,
                 locality:req.body.addressData.locality,
                 status:true
                 }}},
@@ -190,7 +190,9 @@ const editAddress = async(req,res)=>{
 
         const editData = await address.findOne({'address._id' : edit},{'address.$':1});
 
-        // console.log(editData);
+        console.log(editData);
+
+
 
         res.json({editData});
 

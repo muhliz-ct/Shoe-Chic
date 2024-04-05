@@ -3,7 +3,7 @@
 <div class="page-wrapper">
     <%- include('../layouts/navbar-1.ejs') %>
     <main class="main">
-        <div class="page-header text-center" style="background-image: url('assets/images/urban/show.jpg');">
+        <div class="page-header text-center" style="background-image: url(  );">
             <div class="container">
                 <h1 class="page-title text-white">Products</h1>
             </div><!-- End .container -->
@@ -36,7 +36,7 @@
                                                 </a>
     
                                                 <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                    <a href="/addToWhishlist?id=<%=item._id%>" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                                 </div><!-- End .product-action-vertical -->
     
                                                 <div class="product-action">

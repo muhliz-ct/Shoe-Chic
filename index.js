@@ -5,11 +5,11 @@ const dotenv = require('dotenv').config();
 
 
 // Set mongoose:
-const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOURL);
+// const mongoose = require('mongoose');
+// mongoose.connect(process.env.MONGOURL);
 
-// const dbConnect = require('./config/config');
-// dbConnect.dbConnection;
+const dbConnect = require('./config/config');
+dbConnect.dbConnection();
 
 
 

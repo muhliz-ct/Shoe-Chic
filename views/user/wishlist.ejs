@@ -24,91 +24,53 @@
             <div class="page-content">
             	<div class="container">
 					<table class="table table-wishlist table-mobile">
-						<thead>
-							<tr>
-								<th>Product</th>
-								<th>Price</th>
-								<th>Stock Status</th>
-								<th></th>
-								<th></th>
-							</tr>
-						</thead>
+						
+						<% 
+							if (locals.wishlistData.length != 0) {
 
-						<tbody>
-							<tr>
-								<td class="product-col">
-									<div class="product">
-										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/urban/pumademo-1.jpeg" alt="Product image">
-											</a>
-										</figure>
+								%>
 
-										<h3 class="product-title">
-											<a href="#">Palermo Sneakers</a>
-										</h3><!-- End .product-title -->
-									</div><!-- End .product -->
-								</td>
-								<td class="price-col">$10.5</td>
-								<td class="stock-col"><span class="in-stock">In stock</span></td>
-								<td class="action-col">
-                                    <div class="dropdown">
-									<button class="btn btn-block btn-outline-primary-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="icon-list-alt"></i>Select Options
-                                    </button>
+											<thead>
+												<tr>
+													<th>Product</th>
+													<th>Images</th>
 
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">First option</a>
-                                        <a class="dropdown-item" href="#">Another option</a>
-                                        <a class="dropdown-item" href="#">The best option</a>
-                                      </div>
-                                    </div>
-								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-							</tr>
-							<tr>
-								<td class="product-col">
-									<div class="product">
-										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/urban/newBalanceDemo-1.png" alt="Product image">
-											</a>
-										</figure>
+													<th>Price</th>
+													<th>Stock Status</th>
+													<th></th>
+													<th></th>
+												</tr>
+											</thead>
 
-										<h3 class="product-title">
-											<a href="#">9060</a>
-										</h3><!-- End .product-title -->
-									</div><!-- End .product -->
-								</td>
-								<td class="price-col">$56.00</td>
-								<td class="stock-col"><span class="in-stock">In stock</span></td>
-								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
-								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-							</tr>
-							<tr>
-								<td class="product-col">
-									<div class="product">
-										<figure class="product-media">
-											<a href="#">
-												<img src="assets/images/urban/nikegreenDemo-1.jpg" alt="Product image">
-											</a>
-										</figure>
+								<%
+								for (let i = 0; i < wishlistData.length; i++) {
+							%>
+									
+										
+									<tbody>
+										<tr>
+											<td class="product-col">
+												<span><%= wishlistData[i].productName %></span>
+											</td>
+											<td><img src="/productImage/<%= wishlistData[i].productImage[0] %>" alt="product image" style="width:75px; height:75px;"></td>
+											<td class="price-col">$<%= wishlistData[i].price %></td>
+											<td class="stock-col"><span class="in-stock"><%= wishlistData[i].quantity %></span></td>
+											<td class="action-col">
+												<button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Order Now !!!</button>
+											</td>
+											<td class="remove-col"><button class="btn-remove" onclick="removeFromWishlist('<%= wishlistData[i]._id %>')"><i class="icon-close"></i></button></td>
+										</tr>
+									</tbody>
+							<%
+								}
+							} else {
+							%>
+								<h5 class="text-danger">wishlistData empty !! please add products</h5>
+							<%
+							}
+						%>
 
-										<h3 class="product-title">
-											<a href="#">Nike Cortez Vintage</a>
-										</h3><!-- End .product-title -->
-									</div><!-- End .product -->
-								</td>
-								<td class="price-col">$52.00</td>
-								<td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
-								<td class="action-col">
-									<button class="btn btn-block btn-outline-primary-2 disabled">Out of Stock</button>
-								</td>
-								<td class="remove-col"><button class="btn-remove"><i class="icon-close"></i></button></td>
-							</tr>
-						</tbody>
+						
 					</table><!-- End .table table-wishlist -->
 	            	<div class="wishlist-share">
 	            		<div class="social-icons social-icons-sm mb-2">
@@ -148,5 +110,28 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+
+	<script>
+
+		function removeFromWishlist(id){
+			const wishlistId = id;
+			console.log(id);
+
+			fetch(`/removeFromWishlist?id=${id}`,{
+				method:'get',
+				headers:{'Content-Type':"application/json"}
+			}
+ 			).then(res=>res.json).then((data)=>{
+				if(data) {
+					console.log('data reached');
+					location.reload();
+				}
+			}
+				
+			)
+		}
+		
+	</script>
 
 <%- include('../layouts/footer') %>

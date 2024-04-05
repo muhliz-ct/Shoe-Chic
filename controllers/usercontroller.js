@@ -732,7 +732,9 @@ const changeForgotPassword = async(req,res)=>{
 const loadProfile = async(req,res)=>{
     try {
 
-        const userData = await user.findById({_id:req.session.user._id});
+        const sessionUserId = req.session.user._id ;
+
+        const userData = await user.findById({_id:sessionUserId});
 
         const catData = await category.find({categoryName:{$exists:true}});
 

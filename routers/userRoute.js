@@ -23,6 +23,8 @@ const orderController = require('../controllers/orderController');
 
 const productController = require('../controllers/productController');
 
+const whishlistController = require('../controllers/whishlistController');
+
 userRoute.get('/',auth.checkBlockUser,userController.loadHome);//home page route
 
 
@@ -42,7 +44,7 @@ userRoute.get('/about',auth.checkBlockUser,userController.loadAboutus);//AboutUs
 userRoute.get('/profile',userController.loadProfile);
 userRoute.post('/changePassword',userController.changePassword);
 userRoute.post('/editProfile',userController.editProfile);
-userRoute.get('/wishlist',userController.loadWishlist);
+// userRoute.get('/wishlist',userController.loadWishlist);
 userRoute.get('/address',userController.loadAddresses)
 userRoute.post('/logout',userController.userLogout);//Logout
 
@@ -83,6 +85,19 @@ userRoute.post('/getOrder',orderController.placeOrder);
 
 
 userRoute.get('/orders',orderController.loadOrder);
+
+
+userRoute.get('/orderDetails',orderController.loadOrderDetails);
+
+userRoute.get('/cancelProduct',orderController.cancelProduct);
+
+
+userRoute.get('/wishlist',whishlistController.loadWishlist);
+
+
+userRoute.get('/addToWhishlist',whishlistController.addToWishList);
+
+userRoute.get('/removeFromWishlist',whishlistController.removeFromWishlist)
 
 
 

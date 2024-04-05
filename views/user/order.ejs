@@ -6,9 +6,9 @@
 
   <main class="main">
 
-        <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="page-header text-center " style="background-image: url('assets/images/urban/show.jpg')">
             <div class="container">
-                <h1 class="page-title">My Profile</h1>
+                <h1 class="page-title text-white">Orders</h1>
             </div><!-- End .container -->
         </div><!-- End .page-header -->
 
@@ -105,7 +105,7 @@
 
                                             <td><%= val?._id %></td>
 
-                                            <td class="<%= val?.orderStatus == 'canceled' ? 'text-danger' : (val?.orderStatus == 'delivered' ? 'text-success' : 'text-primary') %>"><%= val?.orderStatus %></td>
+                                            <td class="<%= val?.orderStatus == 'cancelled' ? 'text-danger' : (val?.orderStatus == 'delivered' ? 'text-success' : 'text-primary') %>"><%= val?.orderStatus %></td>
 
                                             <td class=""><%= val?.payment %></td>
 

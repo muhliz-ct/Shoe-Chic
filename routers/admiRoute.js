@@ -49,7 +49,8 @@ adminRoute.get('/productedit',productController.loadEditProduct);
 adminRoute.post('/producteditt', multer.upload.fields([{ name: 'image0', maxCount: 1 }, { name: 'image1', maxCount: 1 }, { name: 'image2', maxCount: 1 }]), productController.editProduct);
 
 
-adminRoute.get('/orders',orderController.listOrders)
+adminRoute.get('/orders',orderController.listOrders);
+adminRoute.get('/orderDtails',orderController.adminOrderDetails)
 
 
 
