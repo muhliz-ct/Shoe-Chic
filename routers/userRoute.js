@@ -81,7 +81,8 @@ userRoute.post('/chooseAddress',addressController.chooseAddress);
 
 
 
-userRoute.post('/getOrder',orderController.placeOrder);
+userRoute.post('/getOrder/cod',orderController.placeOrder);
+// userRoute.post('/getOrder/razorpay',orderController.plc);
 
 
 userRoute.get('/orders',orderController.loadOrder);

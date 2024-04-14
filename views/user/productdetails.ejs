@@ -62,7 +62,7 @@
 
                         <div class="col-md-6">
                             <div class="product-details">
-                                <h1 class="product-title"><%=productDetails.name%></h1><!-- End .product-title -->
+                                <h1 class="product-title"><%=productDetails.productName%></h1><!-- End .product-title -->
 
                                <!--  <div class="ratings-container">
                                     <div class="ratings">
@@ -71,9 +71,23 @@
                                     <a class="ratings-text" href="#product-review-link" id="review-link">( 2 Reviews )</a>
                                 </div> -->
 
-                                <div class="product-price">
-                                    Rs:<%=productDetails.price%>.00
-                                </div><!-- End .product-price -->
+                                <% 
+                                if(productDetails.offerprice > 0){
+                                    %>
+                                    <div class="product-price">
+                                    <p class="mr-2"><s>$<%=productDetails.price%>.00</s></p> $<%=productDetails.offerprice%>.00
+                                    </div>
+                                    <%
+                                }else{
+                                    %>
+                                    <div class="product-price">
+                                    $<%=productDetails.price%>.00
+                                    </div><!-- End .product-price -->
+                                    <%
+                                }
+                                %>
+
+                                
 
                                 <div class="product-content">
                                     <p><%=productDetails.description%> </p>

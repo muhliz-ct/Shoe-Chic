@@ -73,9 +73,34 @@
 
 															</td>
 
-															<td class="price-col">$<%= product.productId.price %></td>
+															<% 
+															if(product.productId.offerprice > 0){
+																%>
+																<td class="price-col">$<%= product.productId.offerprice %></td>
 
-															<td class="quantity-col">
+																<td class="quantity-col">
+
+																<div class="cart-product-quantity">
+
+																	<input type="number" class="form-control"
+
+																		oninput="cartUpdate(this,'<%=product.productId.offerprice %>','<%= product.productId._id  %>','<%= locals.cartData._id%>')"
+
+																		value="<%= product.quantity %>" min="1"
+																		max="<%=product.productId.quantity%>" step="1"
+																		data-decimals="0" required>
+
+																</div>
+
+																</td>
+
+																<td class="total-col" name="eprice" id='price<%= product.productId._id %>'>$<%= product.productId.offerprice %></td>
+																<%
+															}else{
+																%>
+																<td class="price-col">$<%= product.productId.price %></td>
+
+																<td class="quantity-col">
 
 																<div class="cart-product-quantity">
 
@@ -89,9 +114,14 @@
 
 																</div>
 
-															</td>
+																</td>
 
-															<td class="total-col" name="eprice" id='price<%= product.productId._id %>'>$<%= product.price %></td>
+																<td class="total-col" name="eprice" id='price<%= product.productId._id %>'>$<%= product.productId.price %></td>
+																<%
+															}
+															%>
+
+
 
 															<td class="remove-col">
 

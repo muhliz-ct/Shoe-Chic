@@ -204,7 +204,7 @@ const editProduct = async(req,res)=>{
 
         editProductt.productImage = imag;
 
-        await product.findByIdAndUpdate({_id:productId},{$set:{productName:req.body.name,price:req.body.price,offerprice:req.body.offerprice,quantity:req.body.stock,description:req.body.description,catogory:req.body.category,brand:req.body.brand}});
+        await product.findByIdAndUpdate({_id:productId},{$set:{productName:req.body.name,price:req.body.price,offerpercentage:req.body.offerpercentage,quantity:req.body.stock,description:req.body.description,catogory:req.body.category,brand:req.body.brand}});
 
         res.redirect('/admin/products');
 

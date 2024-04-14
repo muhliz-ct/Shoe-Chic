@@ -8,6 +8,10 @@ const catogorySchema =new mongoose.Schema({
     is_listed:{
         type:Boolean,
         default:true
+    },
+    categoryOffer:{
+        type:Number,
+        default:0
     }
 })
 

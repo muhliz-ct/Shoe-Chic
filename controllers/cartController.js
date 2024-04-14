@@ -16,6 +16,8 @@ const loadCart = async(req, res) => {
 
             if(catData && cartData && cartData.products && cartData.products.length > 0){
 
+
+
                 const total = cartData.products.reduce((acc, product) => {
                     const price = Number(product.price);
                     return isNaN(price) ? acc : acc + price;
@@ -47,6 +49,8 @@ const loadCart = async(req, res) => {
 const addToCart = async (req, res) => {
     try {
 
+        let totalAmount = 0;
+
         const productId = req.query.id;
 
         const currUserId = req.session.user._id;
@@ -59,7 +63,12 @@ const addToCart = async (req, res) => {
 
         if (!existCartProduct) {
 
-            const totalAmount = quantity * cartProduct.price;
+            if(cartProduct.offerprice > 0){
+                 totalAmount = quantity * cartProduct.offerprice;
+            }else{
+                 totalAmount = quantity * cartProduct.price;    
+            }
+
 
             await cart.findOneAndUpdate(
                 { userId: currUserId },
@@ -126,6 +135,8 @@ const deleteItemFromCart = async(req,res)=>{
 const editCart = async(req,res)=>{
     try {
 
+        let newValue;
+
         const productIdd = req.body.proId;
 
         const cartIdd = req.body.cartId;
@@ -135,8 +146,13 @@ const editCart = async(req,res)=>{
         const productData = await product.findById({_id : productIdd})
 
         // console.log(productData);
+
+        if(productData.offerprice > 0){
+            newValue = productData.offerprice * quantityy;
+        }else{
+             newValue = productData.price * quantityy;
+        }
         
-        const newValue = productData.price * quantityy;
   
         const updatedCart = await cart.findOneAndUpdate({ _id: cartIdd, "products.productId": productIdd }, { $set: { "products.$.price": newValue, "products.$.quantity": quantityy, }, }, { new: true });
 

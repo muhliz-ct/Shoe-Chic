@@ -11,9 +11,11 @@ const adminController = require('../controllers/adminController');
 const categoryController = require('../controllers/categoryController');
 const brandController = require('../controllers/brandController');
 const productController = require('../controllers/productController');
-const orderController = require('../controllers/orderController')
+const orderController = require('../controllers/orderController');
+const couponController = require('../controllers/couponController');
 const multer = require('../middlewares/multer');
 const adminAuth = require('../middlewares/adminAuth');
+
 
 
 
@@ -50,7 +52,13 @@ adminRoute.post('/producteditt', multer.upload.fields([{ name: 'image0', maxCoun
 
 
 adminRoute.get('/orders',orderController.listOrders);
-adminRoute.get('/orderDtails',orderController.adminOrderDetails)
+adminRoute.get('/orderDtails',orderController.adminOrderDetails);
+
+
+adminRoute.put('/orderStatusHandling',orderController.adminOrderHandler);
+
+adminRoute.get('/coupons',couponController.loadCoupon);
+adminRoute.post('/addCoupon',multer.upload.array('couponImage',1),couponController.addCoupon);
 
 
 

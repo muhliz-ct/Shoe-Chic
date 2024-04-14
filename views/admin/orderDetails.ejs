@@ -140,20 +140,20 @@
 
                                                                     <td>$<%= product.productId.price %>.00</td>
                                                                     <td><%= product.quantity %></td>
-                                                                    <td class=" <%= product.orderProStatus == 'canceled' ? 'text-danger' : '' %>">$<%= product.price %>.00</td>
+                                                                    <td class=" <%= product.orderProductStatus == 'cancelled' ? 'text-danger' : '' %>">$<%= product.price %>.00</td>
 
 
                                                                     <td> 
                                                                        
-                                                                        <select id="s<%= product.productId._id %>" value="pending" class="badge bg-transparent <%= product.orderProStatus !='canceled' ? 'badge-outline-success' : 'badge-outline-danger' %>" onchange="orderProstatus(this,'<%= orderDetails._id  %>','<%= product.productId._id %>')">
+                                                                        <select id="s<%= product.productId._id %>" value="pending" class="badge bg-transparent <%= product.orderProductStatus !='cancelled' ? 'badge-outline-success' : 'badge-outline-danger' %>" onchange="orderProductStatus(this,'<%= orderDetails._id  %>','<%= product.productId._id %>')">
 
-                                                                            <option><%= product.orderProStatus %></option>
+                                                                            <option><%= product.orderProductStatus %></option>
 
-                                                                            <option <%= product.orderProStatus == 'shipped' ? 'hidden':'' %>>shipped</option>
+                                                                            <option <%= product.orderProductStatus == 'shipped' ? 'hidden':'' %>>shipped</option>
 
-                                                                            <option <%= product.orderProStatus == 'delivered' ? 'hidden':'' %>>delivered</option>
+                                                                            <option <%= product.orderProductStatus == 'delivered' ? 'hidden':'' %>>delivered</option>
 
-                                                                            <option class="text-danger" <%= product.orderProStatus == 'canceled' ? 'hidden' :'' %>>canceled</option>
+                                                                            <option class="text-danger" <%= product.orderProductStatus == 'cancelled' ? 'hidden' :'' %>>cancelled</option>
 
                                                                         </select>
                                                                             
@@ -200,7 +200,7 @@
 
 //  Order Handling :-
 
-function orderProstatus(e,ordId,proId){
+function orderProductStatus(e,ordId,proId){
 
     const select = document.getElementById(`s${proId}`)
 
@@ -208,7 +208,7 @@ function orderProstatus(e,ordId,proId){
     const yesButton = document.querySelector('#staticBackdrop .btn-primary');
     const nobutton = document.querySelector('#staticBackdrop.btn-secondary')
    
-        if (e.value == 'canceled') {
+        if (e.value == 'cancelled') {
             select.classList.remove('badge-outline-success');
             select.classList.add('badge-outline-danger');
         } else {

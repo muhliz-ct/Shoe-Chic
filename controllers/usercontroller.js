@@ -381,7 +381,7 @@ const verifyOtp = async (req,res)=>{
 
             req.flash('otpDoesNotMatch','The otp sent and entered does not match!!!');
 
-            res.redirect('/otpVerification')
+            // res.redirect('/otpVerification')
 
             console.log('otp does not match!!!');
 
@@ -562,13 +562,66 @@ const loadProductDetails = async(req,res)=>{
 
             const productData = await product.findById({_id:productId});
 
+            console.log(productData);
+
+            const productCat = productData.catogory;
+
+            const currentCatData = await category.findOne({categoryName:productCat});
+
+            if(currentCatData&&currentCatData.categoryOffer > 0){
+                let xx = currentCatData.categoryOffer;
+                let yy = productData.price;
+                let zz = Math.floor((yy*xx)/100);
+                let catDiscPrice = yy - zz;
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+            }
+
+            if(productData.offerpercentage){
+                let x = productData.offerpercentage;
+
+                let y = productData.price;
+
+                let discountAmount = Math.floor((y*x)/100);
+                let offerPrice = y - discountAmount;
+                console.log(offerPrice);
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+            }
+
             res.render('productdetails',{login : req.session.user,productDetails:productData,categoryData:catData});
 
         }else{
+            const productId = req.query.id;
 
             const catData = await category.find({is_listed:true});
 
-            res.render('productdetails' , { login : req.session.user , categoryData:catData });
+            const productData = await product.findById({_id:productId});
+
+            console.log(productData);
+
+            const productCat = productData.catogory;
+
+            const currentCatData = await category.findOne({categoryName:productCat});
+
+            if(currentCatData&&currentCatData.categoryOffer > 0){
+                let xx = currentCatData.categoryOffer;
+                let yy = productData.price;
+                let zz = Math.floor((yy*xx)/100);
+                let catDiscPrice = yy - zz;
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+            }
+
+            if(productData.offerpercentage){
+                let x = productData.offerpercentage;
+
+                let y = productData.price;
+
+                let discountAmount = Math.floor((y*x)/100);
+                let offerPrice = y - discountAmount;
+                console.log(offerPrice);
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+            }
+
+            res.render('productdetails' , { login : req.session.user , productDetails:productData , categoryData:catData });
 
         }
 

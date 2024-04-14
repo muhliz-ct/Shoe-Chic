@@ -25,6 +25,10 @@ const addCategory = async(req,res)=>{
     try {
         const catName = req.body.category.trim().toUpperCase();
 
+        const catDisc = req.body.categoryDiscount;
+
+        console.log(catName, catDisc);
+
         // console.log(catName);
 
         const findCat = await category.findOne({categoryName:catName});
@@ -39,7 +43,8 @@ const addCategory = async(req,res)=>{
         else{
 
             const newCat = new category({
-                categoryName:catName
+                categoryName:catName,
+                categoryOffer:catDisc
             })
 
             await newCat.save();
@@ -112,9 +117,13 @@ const editCategory = async(req,res)=>{
         // console.log(req.body.category);
         const currentCatogoryName = req.query.currentName;
 
+        const editedCategoryDiscount = req.body.catDisc;
+
+        console.log(editedCategoryDiscount);
+
         const editedCatogoryName = req.body.category.trim().toUpperCase();
 
-        const duplicateCategory = await category.findOne({categoryName:editedCatogoryName});
+        const duplicateCategory = await category.findOne({categoryName:editedCatogoryName,categoryOffer:editedCategoryDiscount});
 
         const catData = await category.find({categoryName:{$exists:true}});
 
@@ -125,7 +134,7 @@ const editCategory = async(req,res)=>{
         }
         else{
 
-            await category.findOneAndUpdate({categoryName:currentCatogoryName},{$set:{categoryName:editedCatogoryName}});
+            await category.findOneAndUpdate({categoryName:currentCatogoryName},{$set:{categoryName:editedCatogoryName, categoryOffer:editedCategoryDiscount}});
 
             const catData = await category.find({categoryName:{$exists:true}});
 

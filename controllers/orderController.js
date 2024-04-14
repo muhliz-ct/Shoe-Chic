@@ -13,19 +13,37 @@ const loadOrder = async (req, res) => {
     try {
         const sessionUserId = req.session.user._id;
 
-        // Find orders for the current user
+
         const orderData = await order.find({ userId: sessionUserId });
         console.log(orderData);
 
-        // Iterate through each order
+
         for (const orderItem of orderData) {
-            // Check if all products in the order are canceled
+
             const allProductsCanceled = orderItem.products.every(product => product.orderProductStatus === 'cancelled');
+            const allProductsShipped = orderItem.products.every(product => product.orderProductStatus === 'shipped');
+            const allProductsDelivered = orderItem.products.every(product => product.orderProductStatus === 'delivered');
             if (allProductsCanceled) {
-                // Update the order status to 'cancelled'
+   
                 await order.findOneAndUpdate(
                     { _id: orderItem._id },
                     { $set: { orderStatus: 'cancelled' } }
+                );
+            }else if(allProductsShipped){
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'shipped' } }
+                );
+            }else if(allProductsDelivered){
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'delivered' } }
+                );
+            } 
+            else{
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'pending' } }
                 );
             }
         }
@@ -101,10 +119,51 @@ const placeOrder = async (req, res) => {
     }
 };
 
-// listing order details in admin side
+
+const placeOrderRazor = async(req,res)=>{
+    try {
+        // const currentCartAmount = 
+        
+    } catch (error) {
+        console.error(error.message)
+    }
+}
+
 const listOrders = async(req,res)=>{
     try {
         const orderDetails = await order.find({userId:{$exists:true}});
+
+        for (const orderItem of orderDetails) {
+
+            const allProductsCanceled = orderItem.products.every(product => product.orderProductStatus === 'cancelled');
+            const allProductsShipped = orderItem.products.every(product => product.orderProductStatus === 'shipped');
+            const allProductsDelivered = orderItem.products.every(product => product.orderProductStatus === 'delivered');
+            if (allProductsCanceled) {
+   
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'cancelled' } }
+                );
+            }else if(allProductsShipped){
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'shipped' } }
+                );
+            }else if(allProductsDelivered){
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'delivered' } }
+                );
+            } 
+            else{
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'pending' } }
+                );
+            }
+           
+        }
+        
         res.render('orders',{orderData:orderDetails})
     } catch (error) {
         console.error(error.message);
@@ -120,8 +179,7 @@ const loadOrderDetails = async(req,res)=>{
         const currentObjectId = req.query.id;
         const orderData = await order.findOne({_id:currentObjectId});
 
-        // console.log(orderData);
-        // console.log(req.query.id)
+        
         res.render('orderDetails',{orderData})
         
     } catch (error) {
@@ -135,6 +193,11 @@ const cancelProduct = async (req, res) => {
     try {
         const proId = req.query.id;
         const orderId = req.query.ordId;
+        
+
+        const productData = await product.findOne({_id:proId});
+
+        let currentQuantity = productData.quantity;
 
         // Update product status to 'cancelled'
         const cancelProductUpdate = await order.findOneAndUpdate(
@@ -148,11 +211,13 @@ const cancelProduct = async (req, res) => {
             
             // Calculate the total price of cancelled products and update the order amount
             let sum = 0;
-            let count = 0
+            let count = 0;
+            let quantity = 0;
             orderData.products.forEach(async product => {
                 if (product.productId.toString() === proId && product.orderProductStatus === 'cancelled') {
                     count++;
                     sum += product.price;
+                    quantity += product.quantity;
                     await order.findOneAndUpdate(
                         { _id: orderId, 'products.productId': proId },
                         { $set: { 'products.$.price': 0} }
@@ -176,6 +241,10 @@ const cancelProduct = async (req, res) => {
                 );
             }
 
+            currentQuantity += quantity;
+
+            await product.findOneAndUpdate({_id:proId},{$set:{quantity:currentQuantity}});
+
             console.log('Product cancelled successfully');
             res.send(true);
         } else {
@@ -193,10 +262,49 @@ const cancelProduct = async (req, res) => {
 const adminOrderDetails = async(req,res)=>{
     try {
         const ordId = req.query.id;
-        console.log(ordId);
-        const orderDetails = await order.findOne({_id:ordId}).populate('userId products.productId')
-        console.log(orderDetails);
-        res.render('orderDetails',{orderDetails:orderDetails})
+
+        // console.log(ordId);
+
+        const orderDetails = await order.findOne({_id:ordId}).populate('userId products.productId');
+
+        // console.log(orderDetails);
+
+        res.render('orderDetails',{orderDetails:orderDetails});
+
+    } catch (error) {
+
+        console.error(error.message);
+        
+    }
+}
+
+
+const adminOrderHandler = async(req,res)=>{
+    try {
+
+        // console.log(req.body);
+
+        const ordId = req.body.ordId;
+
+        const productId = req.body.proId;
+
+        const value = req.body.val;
+
+        // console.log(ordId , productId , value);
+
+    
+        const changeOrderStatus = await order.findOneAndUpdate({_id:ordId , 'products.productId':productId},{$set:{'products.$.orderProductStatus':value}},{new:true});
+
+        await order.findOneAndUpdate({_id:ordId},{$set:{orderStatus:value}});
+
+        console.log(changeOrderStatus);
+
+        if(changeOrderStatus){
+            res.send(true);
+        }else{
+            console.log('some error occured while changing the order status');
+        }
+        
     } catch (error) {
         console.error(error.message)
     }
@@ -209,5 +317,6 @@ module.exports = {
     listOrders,
     loadOrderDetails,
     cancelProduct,
-    adminOrderDetails
+    adminOrderDetails,
+    adminOrderHandler
 }
