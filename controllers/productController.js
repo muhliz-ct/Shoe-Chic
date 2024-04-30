@@ -219,7 +219,7 @@ const editProduct = async(req,res)=>{
     }
 }
 
-
+//search product on user side
 const searchProduct = async(req,res)=>{
     try {
         console.log(req.body);

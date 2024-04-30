@@ -74,7 +74,7 @@ const loadCouponUser = async(req,res)=>{
 }
 
 
-
+//apply coupon on user side
 const applyCoupon = async(req,res)=>{
     try {
         const couponCode = req.body.in;
@@ -92,7 +92,7 @@ const applyCoupon = async(req,res)=>{
     }
 }
 
-
+//using coupon on user side
 const couponUse = async(req,res)=>{
     try {
         let newCartPrice;
