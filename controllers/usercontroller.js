@@ -360,6 +360,10 @@ const verifyOtp = async (req,res)=>{
 
             const comparedOtp = await Otp.findOne({OTP:otpToBeVerified,Token:req.body.token});
 
+            if(comparedOtp){
+                delete req.session.otp
+            }
+
             res.render('newPass',{categoryData:catData,email:sendedEmail});
         }
         else{
@@ -755,7 +759,7 @@ const forgotPasswordSendOtp = async ( name , email , otp , token , res )=>{
 
         await userOtp.save();
         
-
+        console.log(userOtp);
 
         setTimeout(async() => {
             await Otp.findOneAndDelete({userEmail:email});
@@ -792,6 +796,8 @@ const forgotPasswordOtp = async(req,res)=>{
         const findUser =await user.findOne({email:emailCheck});
 
         if(findUser){
+
+            req.session.otp = emailCheck;
 
             const generatedOtp = generateOtp();
 
