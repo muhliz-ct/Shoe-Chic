@@ -5,6 +5,7 @@ const product = require('../models/productModel');
 const brand = require('../models/brandModel');
 const address = require('../models/addressModel');
 const cart = require('../models/cartModel');
+const coupon = require('../models/coupanModel');
 const errorHandler = require('../middlewares/errorHandler');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -118,7 +119,7 @@ const loadSignup = async (req,res)=>{
         console.log(`this is flash1 msg ${flash1}`);
         res.render('signUp',{dupUserMessage:flash1});
 
-        // console.log('signup rendered successfully');
+        console.log('signup rendered successfully');
 
     } catch (error) {
 
@@ -317,7 +318,12 @@ const otpLoad = async (req,res)=>{
 
             const flash1 = req.flash('otpDoesNotMatch')
 
-            res.render('otp',{queryEmail,queryToken,remainingTime:remainingTime , otpMismatch : flash1});
+
+            if(req.session.otp){
+                res.render('otp',{queryEmail,queryToken,remainingTime:remainingTime , otpMismatch : flash1});
+            }else{
+                res.redirect('/');
+            }
 
         // }
         // else{
@@ -337,7 +343,11 @@ const otpLoad = async (req,res)=>{
 // verify otp 
 const verifyOtp = async (req,res)=>{
     try {
+
+        // const sessionUserId = req.session.user._id;
         const sendedEmail = req.body.email;
+
+        
         
         // console.log(`this is verify otp ${sendedEmail}`);
 
@@ -369,10 +379,18 @@ const verifyOtp = async (req,res)=>{
             })
             
             const userData = newUser.save();
+
+            console.log(userData);
             
             await user.findOneAndUpdate({email:sendedEmail},{$set:{is_verified:true}});
 
+            // await coupon.updateMany({},{$push:{userId:userData._id}});
+
+            req.session.user=newUser;
+
             console.log('verified');
+
+            delete req.session.otp
 
             res.redirect('/');
 
@@ -498,8 +516,9 @@ const userLogout = async(req,res)=>{
 // load profile 
 const profileLoad = async(req,res)=>{
     try {
+        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
 
-        res.render('homePage' , {login : req.session.user})
+        res.render('homePage' , {login : req.session.user , cartData:Data})
 
     } catch (error) {
 
@@ -568,12 +587,21 @@ const loadProductDetails = async(req,res)=>{
 
             const currentCatData = await category.findOne({categoryName:productCat});
 
-            if(currentCatData&&currentCatData.categoryOffer > 0){
+            if(productData.offerpercentage > 0 && currentCatData.categoryOffer > 0){
                 let xx = currentCatData.categoryOffer;
-                let yy = productData.price;
-                let zz = Math.floor((yy*xx)/100);
-                let catDiscPrice = yy - zz;
-                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                let qq = productData.offerpercentage;
+                if(xx>qq){
+                    let yy = productData.price;
+                    let zz = Math.floor((yy*xx)/100);
+                    let catDiscPrice = yy - zz;
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                }else{
+                    let yy = productData.price;
+                    let zz = Math.floor((yy*qq)/100);
+                    let catDiscPrice = yy - zz;
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                    }
+                
             }
 
             if(productData.offerpercentage){
@@ -587,7 +615,18 @@ const loadProductDetails = async(req,res)=>{
                 await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
             }
 
-            res.render('productdetails',{login : req.session.user,productDetails:productData,categoryData:catData});
+            if(currentCatData && currentCatData.categoryOffer > 0 ){
+                let x = currentCatData.categoryOffer;
+
+                let y = productData.price;
+
+                let discountAmount = Math.floor((y*x)/100);
+                let offerPrice = y - discountAmount;
+                console.log(offerPrice);
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+            }
+
+            res.render('productdetails',{login : req.session.user , productDetails:productData , categoryData:catData , cartData:Data});
 
         }else{
             const productId = req.query.id;
@@ -602,12 +641,21 @@ const loadProductDetails = async(req,res)=>{
 
             const currentCatData = await category.findOne({categoryName:productCat});
 
-            if(currentCatData&&currentCatData.categoryOffer > 0){
+            if(productData.offerpercentage > 0 && currentCatData.categoryOffer > 0){
                 let xx = currentCatData.categoryOffer;
-                let yy = productData.price;
-                let zz = Math.floor((yy*xx)/100);
-                let catDiscPrice = yy - zz;
-                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                let qq = productData.offerpercentage;
+                if(xx>qq){
+                    let yy = productData.price;
+                    let zz = Math.floor((yy*xx)/100);
+                    let catDiscPrice = yy - zz;
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                }else{
+                    let yy = productData.price;
+                    let zz = Math.floor((yy*qq)/100);
+                    let catDiscPrice = yy - zz;
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                    }
+                
             }
 
             if(productData.offerpercentage){
@@ -621,9 +669,24 @@ const loadProductDetails = async(req,res)=>{
                 await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
             }
 
+            if(currentCatData && currentCatData.categoryOffer > 0 ){
+                let x = currentCatData.categoryOffer;
+
+                let y = productData.price;
+
+                let discountAmount = Math.floor((y*x)/100);
+                let offerPrice = y - discountAmount;
+                console.log(offerPrice);
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+            }
+
+
+
             res.render('productdetails' , { login : req.session.user , productDetails:productData , categoryData:catData });
 
         }
+
+        
 
         // const productId = req.query.id;
         // const catData = await category.find({categoryName:{$exists:true}});
@@ -785,17 +848,19 @@ const changeForgotPassword = async(req,res)=>{
 const loadProfile = async(req,res)=>{
     try {
 
-        const sessionUserId = req.session.user._id ;
+        const sessionUserId = req.session.user._id;
 
         const userData = await user.findById({_id:sessionUserId});
 
         const catData = await category.find({categoryName:{$exists:true}});
 
+        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
+
         const msg = req.flash('msg');
 
         const editSuccessMessage = req.flash('editSuccessMessage');
 
-        res.render('profile',{login:req.session.user,categoryData:catData,userData,msgg:msg,editSucMsg:editSuccessMessage});
+        res.render('profile',{login:req.session.user , categoryData:catData , userData,msgg:msg , editSucMsg:editSuccessMessage , cartData:Data});
 
     } catch (error) {
 
@@ -870,7 +935,9 @@ const loadWishlist = async(req,res)=>{
 
         const catData = await category.find({categoryName:{$exists:true}});
 
-        res.render('wishlist',{categoryData:catData,login:req.session.user});
+        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
+
+        res.render('wishlist',{categoryData:catData , login:req.session.user , cartData:Data});
 
     } catch (error) {
 
@@ -888,11 +955,15 @@ const loadAddresses = async(req,res)=>{
 
         const addressData = await address.findOne({userId:userId});
 
+        const catData = await category.find({categoryName:{$exists:true}});
+
+        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
+
         // console.log(addressData);
 
         const userData = await user.findById({_id:userId});
 
-        res.render('addresses',{address:addressData, userData:userData , userData:userId});
+        res.render('addresses',{login:req.session.user , address:addressData, userData:userData , userData:userId , cartData:Data , categoryData:catData});
 
     } catch (error) {
 
@@ -909,11 +980,11 @@ const loadCheckout = async(req,res)=>{
 
         const userId = req.session.user._id;
 
-        console.log(userId);
+        // console.log(userId);
 
         const catData = await category.find({categoryName:{$exists:true}});
 
-        const cartData = await cart.findOne({userId:userId}).populate('products.productId');
+        const Data = await cart.findOne({userId:userId}).populate('products.productId');
 
         // console.log(cartData1);
 
@@ -921,7 +992,7 @@ const loadCheckout = async(req,res)=>{
 
         // console.log(savedAddress);
         
-        res.render('checkout',{login:req.session.user , categoryData:catData , userData:userId , cartData , addres:savedAddress});
+        res.render('checkout',{login:req.session.user , categoryData:catData , userData:userId , cartData:Data , addres:savedAddress});
 
     } catch (error) {
 

@@ -2,7 +2,7 @@
 
 <div class="page-wrapper">
 	
-	<%- include('../layouts/navbar-2.ejs') %>
+	<%- include('../layouts/navbar-1.ejs') %>
 
      <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/urban/allProducts.jpeg')">
@@ -111,12 +111,31 @@
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
-            			<div class="checkout-discount">
-            				<form action="#">
-        						<input type="text" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form>
-            			</div><!-- End .checkout-discount -->
+            			<div class="cart-discount">
+                       
+							<% if(cartData){ %>
+						  
+						   <form action="/couponUse" method="post">
+							   <p class="ps-2" id="cop"></p>
+							   <div class="input-group">
+								   <input type="text" class="form-control" required placeholder="coupon code"   oninput="coup(this)" name="coupon">
+								   <div class="input-group-append">
+									   <button class="btn btn-outline-primary-2 px-2" style="height: 40px;" type="submit" id="btc">Apply</button>
+								   </div><!-- .End .input-group-append -->
+							   </div><!-- End .input-group -->
+						   </form>
+						   <% }else{ %>
+							   <form >
+								  
+								   <div class="input-group">
+									   <input type="text" class="form-control"  placeholder="Remove your Coupon" id="rem" name="coupon" disabled>
+									   <div class="input-group-append">
+										   <button class="btn btn-outline-danger px-2"style="height: 40px;" type="button" onclick="CouponRe('<%=cartData?._id%>')" id="btc">Remove</button>
+									   </div><!-- .End .input-group-append -->
+								   </div><!-- End .input-group -->
+							   </form>
+						   <% } %>
+					   </div><!-- End .cart-discount -->
 
 						<% if (!locals.addres || locals.addres.address.length == 0) { %>
 
@@ -514,7 +533,7 @@
 								<tbody>
 									<% cartData?.products.forEach((product, index) => { %>
 										<tr>
-											<td><a href="#"><%= product.productId.name %></a></td>
+											<td><a href="#"><%= product.productId.productName %></a></td>
 											<td>$<%= product.price %>.00</td>
 										</tr>
 									<% }) %>
@@ -535,33 +554,47 @@
 									<% } %>
 								</tbody>
 							</table>
-					
+
+							
+							<form action="/getOrder" id="order-form" method="post">
+							
 							<div class="card">
 								<div class="card-header" id="payment-methods-heading">
 									<h2 class="card-title">Payment Method</h2>
 								</div>
 								<div class="card-body">
+									<% if(cartData.totalCartPrice > 1000){
+										%>
+										<label>
+											<input type="radio" name="paymentmethod" id="cod" value="cod" style="display: none;">
+											<span class="text-decoration-line-through">Cash on Delivery</span>
+										</label><br>
+										<%
+									}else{
+										%>
+										<label>
+											<input type="radio" name="paymentmethod" id="cod" value="cod">
+											Cash on Delivery
+										</label><br>
+										<%
+									} %>
+									
 									<label>
-										<input type="radio" name="payment-method" id="cod" value="cod">
-										Cash on Delivery
-									</label><br>
-									<label>
-										<input type="radio" name="payment-method" id="wallet" value="wallet">
+										<input type="radio" name="paymentmethod" id="wallet" value="wallet">
 										Wallet
 									</label><br>
 									<label>
-										<input type="radio" name="payment-method" id="razorpay" value="razorpay">
+										<input type="radio" name="paymentmethod" id="razorpay" value="razorpay">
 										Razorpay
 									</label>
 								</div>
 							</div>
 					
-							<form id="order-form" method="post">
 								<div>
 									<% if (cartData?.products.length == 0) { %>
 										<a href="/product" class="btn btn-outline-primary-2 btn-order btn-block">ADD PRODUCT TO CART</a>
 									<% } else { %>
-										<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+										<button type="button" class="btn btn-outline-primary-2 btn-order btn-block" onclick="placeOrder('<%= cartData.totalCartPrice %>','<%= cartData.userId %>')">
 											<span class="btn-text">Place Order</span>
 											<span class="btn-hover-text">Proceed to Checkout</span>
 										</button>
@@ -604,6 +637,7 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	
 	
 	
@@ -779,18 +813,94 @@ if(msg.textContent == 'Address Edited'){
 
 };
 
+function placeOrder(amount , userId){
+	console.log(amount , userId);
+	const selectedMethod = document.querySelector('input[name="paymentmethod"]:checked').value;
+	const form = document.getElementById('order-form');
+	console.log(selectedMethod);
+	if(selectedMethod == 'cod'){
+		form.submit()
+	}else if(selectedMethod == 'wallet'){
+		form.submit()
+	}else if(selectedMethod == 'razorpay'){
+		razor(amount , userId)
+	}
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-							const paymentMethods = document.querySelectorAll('input[name="payment-method"]');
-							const orderForm = document.getElementById('order-form');
-					
-							paymentMethods.forEach(function(method) {
-								method.addEventListener('change', function() {
-									const selectedMethod = document.querySelector('input[name="payment-method"]:checked').value;
-									orderForm.action = '/getOrder/' + selectedMethod;
-								});
-							});
-						});
+
+function razor(amount , userId){
+	console.log('reached razor');
+	// console.log(totalAmount , userId);
+    const form=document.getElementById('order-form'); 
+            fetch('/razor', {
+                method: 'POST',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify({ amount, userId })
+            }).then(res => res.json()).then(data => {
+                if (data.succes) {
+                    console.log(data)
+                    let options = {
+                                    "key": `${data.key_id}`,
+                                    "amount": `${data.amount}`,
+                                    "currency": "INR",
+                                    "name": "ShoeChic",
+                                    "order_id": `${data.order_id}`,
+                                    "handler": function (response) {
+                                        form.submit();
+                                        
+                                    },
+                                    "profile": {
+                                        "name": `${data.name}`,
+                                        "email": `${data.email}`
+                                    }
+                                }
+								let razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', (response) => {
+                    //    fetch('/razorFailed');
+					   form.action = '/razorFailed';
+					   form.submit();
+                    });
+                    razorpayObject.open();
+                }else if(data.emptycart){
+                    Swal.fire({
+                    icon: "warning",
+                    title: "Oops...",
+                    text: "Your Cart is empty",
+                    footer: '<a href="/products">Why do I have this issue?</a>'                                                                                                                                                           
+                    });
+                }else if(data.emptyaddress){
+                        Swal.fire({
+                        icon: "warning",
+                        title: "Oops...",
+                        text: "Add your Address..",
+                        footer: '<a href="/checkout">Why do I have this issue?</a>'
+                        });
+                }
+        })
+}
+
+
+
+function coup(inp){
+        const msg = document.getElementById('cop')
+        const button = document.getElementById('btc')
+       fetch('/couponApply',{method:'put',headers:{'content-Type':'application/json'},body:JSON.stringify({in:inp.value})}) .then(res => res.json())
+       .then(data => {
+        if(data.success){
+            msg.textContent='Coupon Available '
+            msg.classList.add('text-success')
+            msg.classList.remove('text-danger')
+            button.disabled =false
+        }else if(data.not){
+            msg.textContent='Not Valid Coupon'
+            msg.classList.add('text-danger')
+            msg.classList.remove('text-success')
+            button.disabled=true
+        }
+       })
+    }
+																					
+																		
 </script>
 
 <style>

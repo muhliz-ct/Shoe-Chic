@@ -46,6 +46,7 @@
               <tr class="">
                 <th class="px-5 text-success">Sl.No</th> 
                 <th class="px-5 text-success">Category</th >
+                <th class="px-5 text-success">Discount</th >
                 <th class="px-5 text-success">List</th> 
                 <th class="px-5 text-success">Edit</th> 
                 <th class="px-5 text-success">Status</th> 
@@ -59,6 +60,7 @@
                                 <tr>
                                     <td class="px-5"><%= i+1 %></td>
                                     <td class="px-5"><%= categoryData[i].categoryName %></td>
+                                    <td class="px-5"><%= categoryData[i]?.categoryOffer %></td>
                                     <td class="px-5">
                                       <%
                                       

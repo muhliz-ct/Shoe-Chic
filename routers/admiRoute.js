@@ -13,6 +13,8 @@ const brandController = require('../controllers/brandController');
 const productController = require('../controllers/productController');
 const orderController = require('../controllers/orderController');
 const couponController = require('../controllers/couponController');
+const reportController = require('../controllers/reportController');
+const dashboardController = require('../controllers/dashboard')
 const multer = require('../middlewares/multer');
 const adminAuth = require('../middlewares/adminAuth');
 
@@ -21,7 +23,9 @@ const adminAuth = require('../middlewares/adminAuth');
 
 adminRoute.get('/',adminAuth.isLogout,adminController.adminLoginLoad);
 adminRoute.post('/',adminController.verifyAdmin);
-adminRoute.get('/dashboard',adminAuth.isLogin,adminController.adminLoadHome);
+adminRoute.get('/dashboard',adminAuth.isLogin,dashboardController.loadDahboard);
+adminRoute.put('/monthChart',adminAuth.isLogin,dashboardController.monthChart);
+adminRoute.put('/chartYear',adminAuth.isLogin,dashboardController.chartYear);
 adminRoute.get('/users',adminAuth.isLogin,adminController.adminUserListLoad);
 
 
@@ -59,6 +63,10 @@ adminRoute.put('/orderStatusHandling',orderController.adminOrderHandler);
 
 adminRoute.get('/coupons',couponController.loadCoupon);
 adminRoute.post('/addCoupon',multer.upload.array('couponImage',1),couponController.addCoupon);
+adminRoute.post('/deleteCoupon',couponController.deleteCoupon);
+
+adminRoute.get('/salesReport/:id',reportController.loadReport);
+adminRoute.put('/customReport',reportController.customReport)
 
 
 

@@ -1,331 +1,372 @@
-<%- include('../layouts/header') %>
 
-<div class="page-wrapper">
+<%- include('../layouts/header.ejs') %>
 
-  <%- include('../layouts/navbar-2.ejs') %>
+<div class="container-scroller">
 
-  <main class="main">
 
-        <div class="page-header text-center" style="background-image: url(assets/images/urban/show.jpg)">
-            <div class="container">
-                <h1 class="page-title text-white">Order Details</h1>
-            </div><!-- End .container -->
-        </div><!-- End .page-header -->
+    <div class="container-fluid page-body-wrapper">
 
-        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
-            <div class="container">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="">Home</a></li>
-                    <!-- <li class="breadcrumb-item"><a href="#"></a></li> -->
-                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
-                </ol>
-            </div><!-- End .container -->
-        </nav><!-- End .breadcrumb-nav -->
+        <%- include('../layouts/navbar-1.ejs') %>
+              
+    <div class="main-panel ">
 
-        <div class="page-content">
+        <div class="row">
 
-              <div class="dashboard">
-          
-                  <div class="container">
+                    <div class="col-lg-12 ">
 
-                      <div class="row">
+                        <div id="addproduct-accordion" class="custom-accordion">
 
-                          <aside class="col-md-4 col-lg-3">
+                            <div class="card border-light " style="background-color: #3c0340; margin-top: 20px;">
 
-                              <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-
-                                  <li class="nav-item">
-                                      <a class="nav-link " id="tab-dashboard-link" href="/profile"> My Profile</a>
-                                  </li>
-
-                                  <li class="nav-item">
-                                      <a class="nav-link active" id="tab-orders-link" href="/orders" role="tab">Orders</a>
-                                  </li>
-
-                                  <!-- <li class="nav-item">
-                                      <a class="nav-link" id="tab-downloads-link" href="#" role="tab">Wishlist</a>
-                                  </li> -->
-
-                                  <li class="nav-item">
-                                      <a class="nav-link" id="tab-address-link"  href="/address">Adresses</a>
-                                  </li>
-
-                                  <li class="nav-item">
-                                      <a class="nav-link" id="tab-wallet-link" data-toggle="tab" href="#" role="tab">Wallet</a>
-                                  </li>
-
-                                  <li class="nav-item">
-                                      <a class="nav-link" id="tab-coupons-link" data-toggle="tab" href="#" role="tab">Coupons</a>
-                                  </li>
-                                  
-                                  <li class="nav-item">
+                                <a href="" class="text-white " data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
                                     
-                                    <a class="nav-link " href="">Sigout</a>
+                                    <div class="p-4">
 
-                                  </li>
-                                  
-                                </ul>
-
-                            </aside>
-
-                    <div class="col-md-8 col-lg-9">
-
-                        <div class="tab-content">
-
-                             <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
-
-                                <div class="row w-100" style="gap: 2rem">
-
-                                    <div class="container">
-
-                    <% if (orderData) { %>
-                                
-                        <table id="myTable" class="table table-wishlist table-mobile text-center" style="width: 920px">
-
-                                    <thead>
-
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Product Id</th>
-                                            <th>Quantity</th>
-                                            <th>Amount</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-
-                                    </thead>
-
-                                <tbody class="text-center ">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="">
+                                                <h4 class="font-size-14 mb-1 text-white">Date: <%= orderDetails.dateOfOrder.toString().split(' ').slice(0,4).join(' ') %></h4>
+                                                <p class="text-white text-truncate mb-0">Order Id: #<%= orderDetails._id %></p>
+                                            </div>
                                         
-                            <% orderData.products.forEach((val , ind)=> {  %>
-                                            
-                                        <% if(val?.orderProductStatus=='cancelled'){
-                                            %>
-                                            <tr class="fs-4" style="pointer-events: none; background-color: #f8f9fa; color: gray; ">
-
-                                                        <td><%= ind + 1 %></td>
-
-                                                        <td><%= val?.productId %></td>
-
-                                                        <td><%= val?.quantity %></td>
-
-                                                        <td class=""><%= val?.price %></td>
-
-                                                        <td class=""><%= val?.orderProductStatus %></td>
-
-                                                        <td>
-
-                                                            <div class="dropdown">
-                                                                <a
-                                                                href="#"
-                                                                style="
-                                                                    border-radius: 5px;
-                                                                    border: 0px solid transparent;
-                                                                    outline: 0px;
-                                                                    transition: all ease 0.5s;
-                                                                    background-color: rgb(122, 122, 125);
-                                                                "
-                                                                class="p-3 rounded-2 text-white dropdown-toggle"
-                                                                role="button"
-                                                                id="dropdownMenuLink"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false"
-                                                                >
-                                                                Actions
-                                                                </a>
-                                                            
-                                                              
-
-                                                        </td>
-                                             </tr>
-
-                                                    
-
-
-                                                        
-                                            <%
-                                        }
-                                        else{
-                                            %>
-
-                                                 <tr class="fs-4">
-
-                                                            <td><%= ind + 1 %></td>
-
-                                                            <td><%= val?.productId %></td>
-
-                                                            <td><%= val?.quantity %></td>
-
-                                                            <td class=""><%= val?.price %></td>
-
-                                                            <td class=""><%= val?.orderProductStatus %></td>
-
-                                                            <td>
-
-                                                                <div class="dropdown">
-                                                                    <a
-                                                                    href="/orderDetails?id=<%= val?._id %>"
-                                                                    style="
-                                                                        border-radius: 5px;
-                                                                        border: 0px solid transparent;
-                                                                        outline: 0px;
-                                                                        transition: all ease 0.5s;
-                                                                        background-color: rgb(54, 6, 247);
-                                                                    "
-                                                                    class="p-3 rounded-2 text-white dropdown-toggle"
-                                                                    role="button"
-                                                                    id="dropdownMenuLink"
-                                                                    data-bs-toggle="dropdown"
-                                                                    aria-expanded="false"
-                                                                    >
-                                                                    Actions
-                                                                    </a>
-                                                                
-                                                                    <ul class="dropdown-menu bg-dark text-white" aria-labelledby="dropdownMenuLink">
-                                                                    
-                                                                    <% if(val?.orderProductStatus == 'cancelled'){
-                                                                        %>
-                                                                        <li></li>
-                                                                        <%
-                                                                    }
-                                                                    else{
-                                                                        %>
-                                                                        <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal_<%= ind %>">Cancel</a></li>
-                                                                        <li><a class="dropdown-item text-info" href="#">Return</a></li>
-                                                                        <%
-                                                                    }
-                                                                    %>
-                                                                    
-
-                                                                    
-                                                                    </ul>
-                                                                    <!-- Conformation modal for cancelling an order -->
-                                                                    
-                                                                    <div class="modal fade" id="cancelModal_<%= ind %>" tabindex="-1" aria-labelledby="cancelModalLabel_<%= ind %>" aria-hidden="true">
-                                                                        <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                    <h5 class="modal-title" id="cancelModalLabel_<%= ind %>">Cancel Order Confirmation</h5>
-                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    Are you sure you want to cancel this order?
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                    <button type="button" onclick="cancelProduct('<%= val.productId  %>','<%= orderData._id  %>','<%= ind %>')" class="btn btn-danger">Cancel Order</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                                
-
-                                                            </td>
-                                                            </tr>
-
-                                                           
-
-                                                            
-
-                                            <%
-                                        }
-
-                                         %>
-
-                                   <% }); %>
-
-                                </tbody>
-
-
-                        </table>
-                        
-
-                    <% } else {  %>
-
-                        <div class="">
-
-                            <p class=" text-primary">Order Not Found</p>
-                            
-                        </div>
-
-                    <% } %>
-
-                            <% if(orderData) {%>
-
-                                <div class="wishlist-share">
-
-                                    <div class="social-icons social-icons-sm mb-2"> 
-
-                                    <label class="social-label">Total Order:</label>
-
-                                    <%= orderData.products.length %>
+                                            <div>
+                                                <a href="/invoice/<%= orderDetails._id %>"><button class="btn btn-secondary rounded-pill">Invoice</button></a>
+                                            </div>
+                                        </div>
 
                                     </div>
+                                </a>
 
-                                    <!-- End .soial-icons -->
+                                <div id="addproduct-billinginfo-collapse" class="collapse show"
+                                    data-bs-parent="#addproduct-accordion">
+                                    <div class="p-4 border-top w-100 border-light">
 
+                                            <div class="row">
+
+                                                <div class=" col-md-4 d-flex">
+
+                                                    <div class=" text-center " style="width: 3rem;">
+                                                            <i class="ri-user-fill" style="font-size: 25px;"></i>
+                                                    </div>
+
+                                                    <div class=" w-75">
+
+                                                        <h5 class="mt-1 text-white">Customer</h5>
+                                                        <span class="text-white"><%= orderDetails.userId.fullName %></span><br>
+                                                        <span class="text-white"><%= orderDetails.userId.email %></span><br>
+                                                        <span class="text-white"><%= orderDetails.userId.phone %></span>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                                <br>
+
+                                                <div class=" col-md-4 d-flex ">
+                                                    <div  style="width: 3rem;">
+                                                        <i class="ri-truck-fill"style="font-size: 30px;" ></i>
+                                                </div>
+
+                                                <div class="w-75">
+
+                                                    <h5 class="mt-1 text-white">Order info</h5>
+
+                                                    <span class="text-white">Pay Method: <%= orderDetails.payment %></span><br>
+                                                    <span class="text-white">Payment Status: <%= orderDetails.orderStatus %></span>
+
+                                                </div>
+
+                                                </div>
+
+                                                <br>
+
+                                                <div class=" col-md-4 d-flex">
+
+                                                    <div style="width: 3rem;">
+                                                        <i class="ri-map-pin-line" style="font-size: 30px;"></i>
+                                                    </div>
+
+                                                <div class=" w-75">
+
+                                                    <h5 class="mt-1 text-white">Deliver to</h5>
+
+                                                    <span class="text-white"><%= orderDetails.deliveryAddress.name %></span><br>
+                                                    <span class="text-white"><%= orderDetails.deliveryAddress.phone %></span><br>
+                                                    <span class="text-white"><%= orderDetails.deliveryAddress.city %></span><br>
+                                                    <span class="text-white"><%= orderDetails.deliveryAddress.state %></span>
+                                                    <span class="text-white"><%= orderDetails.deliveryAddress.pincode %></span><br>
+
+                                                </div>
+
+                                                </div>
+
+                                                <br>
+
+                                            </div>
+
+                                            <br>
+
+                                            <div class="row">
+
+                                                <div class="col-md-12">
+
+                                                    <table class="table align-middle table-nowrap table-check text-white text-center ">
+
+                                                        <thead >
+
+                                                            <tr class="bg-transparent ">
+
+                                                                <td style="font-size: 16px;">Sl.No</td>
+                                                                <td style="font-size: 16px;">Product</td>
+                                                                <td style="font-size: 16px;">Quantity</td>
+                                                                <td style="font-size: 16px;">Total</td>
+                                                                <td style="font-size: 16px;">Status</td>
+                                                                <td style="font-size: 16px;">Actions</td>
+
+                                                            </tr>
+
+                                                        </thead>
+
+                                                        <thead class="text-center">
+
+                                                            <% orderDetails.products.forEach((val , ind)=> {  %>
+                                            
+                                                                <% if(val?.orderProductStatus=='cancelled' || val?.orderProductStatus=='returned'){
+                                                                    %>
+                                                                    <tr class="fs-4" style="pointer-events: none;">
+                        
+                                                                                <td><%= ind + 1 %></td>
+                        
+                                                                                <td><%= val?.productId.productName %></td>
+                        
+                                                                                <td><%= val?.quantity %></td>
+                        
+                                                                                <td class="text-decoration-line-through"><del><%= val?.price %></del></td>
+                        
+                                                                                <td class=""><%= val?.orderProductStatus %></td>
+                        
+                                                                                <td>
+                        
+                                                                                    <div class="dropdown">
+                                                                                        <a
+                                                                                        href="#"
+                                                                                        style="
+                                                                                            border-radius: 5px;
+                                                                                            border: 0px solid transparent;
+                                                                                            outline: 0px;
+                                                                                            transition: all ease 0.5s;
+                                                                                            background-color: rgb(122, 122, 125);
+                                                                                        "
+                                                                                        class="p-3 rounded-2 text-white dropdown-toggle"
+                                                                                        role="button"
+                                                                                        id="dropdownMenuLink"
+                                                                                        data-bs-toggle="dropdown"
+                                                                                        aria-expanded="false"
+                                                                                        >
+                                                                                        Actions
+                                                                                        </a>
+                                                                                    
+                                                                                      
+                        
+                                                                                </td>
+                                                                     </tr>
+                        
+                                                                            
+                        
+                        
+                                                                                
+                                                                    <%
+                                                                }
+                                                                else{
+                                                                    %>
+                        
+                                                                         <tr class="fs-4">
+                        
+                                                                                    <td><%= ind + 1 %></td>
+                        
+                                                                                    <td><%= val?.productId.productName %></td>
+                        
+                                                                                    <td><%= val?.quantity %></td>
+                        
+                                                                                    <td class=""><%= val?.price %></td>
+                        
+                                                                                    <td class=""><%= val?.orderProductStatus %></td>
+                        
+                                                                                    <td>
+                        
+                                                                                        <div class="dropdown">
+                                                                                            <a
+                                                                                            href="/orderDetails?id=<%= val?._id %>"
+                                                                                            style="
+                                                                                                border-radius: 5px;
+                                                                                                border: 0px solid transparent;
+                                                                                                outline: 0px;
+                                                                                                transition: all ease 0.5s;
+                                                                                                background-color: rgb(54, 6, 247);
+                                                                                            "
+                                                                                            class="p-3 rounded-2 text-white dropdown-toggle"
+                                                                                            role="button"
+                                                                                            id="dropdownMenuLink"
+                                                                                            data-bs-toggle="dropdown"
+                                                                                            aria-expanded="false"
+                                                                                            >
+                                                                                            Actions
+                                                                                            </a>
+                                                                                        
+                                                                                            <ul class="dropdown-menu bg-dark text-white" aria-labelledby="dropdownMenuLink">
+                                                                                            
+                                                                                            <% if(val?.orderProductStatus == 'delivered'){
+                                                                                                %>
+                                                                                                <li><a class="dropdown-item text-info" href="#" data-bs-toggle="modal" data-bs-target="#returnModal_<%= ind %>">Return</a></li>
+                                                                                                <%
+                                                                                            }else if(val?.orderProductStatus == 'Payment Failed'){
+                                                                                                %>
+                                                                                                <li><a id="placeOrderLink" class="dropdown-item text-success" href="#" data-bs-toggle="modal" data-bs-target="#confirmationModal">Place Order</a></li>
+                                                                                                <%
+                                                                                            }
+                                                                                            else{
+                                                                                                %>
+                                                                                                <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#cancelModal_<%= ind %>">Cancel</a></li>
+                                                                                                <%
+                                                                                            }
+                                                                                            %>
+                                                                                            
+                        
+                                                                                            
+                                                                                            </ul>
+
+                                                                                            <!-- Bootstrap Modal -->
+                                                                                            <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+                                                                                            <div class="modal-dialog">
+                                                                                                <div class="modal-content">
+                                                                                                <div class="modal-header">
+                                                                                                    <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                                                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                                </div>
+                                                                                                <div class="modal-body text-dark">
+                                                                                                    Are you sure you want to place the order?
+                                                                                                </div>
+                                                                                                <div class="modal-footer">
+                                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                                                    <button onclick="failedPaymentRetry('<%= orderDetails._id %>','<%= orderDetails.orderAmount %>')" id="confirmOrderButton" type="button" class="btn btn-primary">Yes, Place Order</button>
+                                                                                                </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            </div>
+
+
+
+                                                                                            <!-- Conformation modal for cancelling an order -->
+                                                                                            
+
+                                                                                            <div class="modal fade" id="cancelModal_<%= ind %>" tabindex="-1" aria-labelledby="cancelModalLabel_<%= ind %>" aria-hidden="true">
+                                                                                                <div class="modal-dialog">
+                                                                                                    <div class="modal-content">
+                                                                                                        <div class="modal-header">
+                                                                                                            <h5 class="modal-title" id="cancelModalLabel_<%= ind %>">Return Order Confirmation</h5>
+                                                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                                        </div>
+                                                                                                        <div class="modal-body">
+                                                                                                            
+                                                                                                        </div>
+                                                                                                        <div class="modal-footer">
+                                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                                                            <button type="button" class="btn btn-danger" onclick="cancelProduct('<%= val.productId._id  %>','<%= orderDetails._id  %>','<%= ind %>')">Cancel Product</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+
+
+
+
+                                                                                            
+                                                                                            <!-- Return modal -->
+                                                                                            <div class="modal fade" id="returnModal_<%= ind %>" tabindex="-1" aria-labelledby="returnModalLabel_<%= ind %>" aria-hidden="true">
+                                                                                                <div class="modal-dialog">
+                                                                                                    <div class="modal-content">
+                                                                                                        <div class="modal-header">
+                                                                                                            <h5 class="modal-title" id="returnModalLabel_<%= ind %>">Return Order Confirmation</h5>
+                                                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                                        </div>
+                                                                                                        <div class="modal-body">
+                                                                                                            <form id="returnForm_<%= ind %>">
+                                                                                                                <div class="mb-3">
+                                                                                                                    <label for="returnReason_<%= ind %>" class="form-label">Reason for Return:</label>
+                                                                                                                    <select class="form-select" id="returnReason_<%= ind %>" name="returnReason_<%= ind %>">
+                                                                                                                        <option value="size_not_match">Size not match</option>
+                                                                                                                        <option value="product_defect">Product defect</option>
+                                                                                                                        <option value="wrong_material">Wrong material</option>
+                                                                                                                        <option value="other">Other</option>
+                                                                                                                    </select>
+                                                                                                                </div>
+                                                                                                                <div class="mb-3">
+                                                                                                                    <label for="customReason_<%= ind %>" class="form-label">Custom Reason:</label>
+                                                                                                                    <input type="text" class="form-control" id="customReason_<%= ind %>" name="customReason_<%= ind %>" placeholder="Enter custom reason">
+                                                                                                                </div>
+                                                                                                            </form>
+                                                                                                        </div>
+                                                                                                        <div class="modal-footer">
+                                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                                                            <button type="button" class="btn btn-danger" onclick="returnProduct('<%= val.productId._id  %>','<%= orderDetails._id  %>','<%= ind %>')">Return Product</button>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                        
+                        
+                                                                                            
+                        
+                                                                                        </div>
+                                                                                        
+                        
+                                                                                    </td>
+                                                                                    </tr>
+                        
+                                                                                   
+                        
+                                                                                    
+                        
+                                                                    <%
+                                                                }
+                        
+                                                                 %>
+                        
+                                                           <% }); %>
+
+                                                        </thead>
+
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                    </div>
                                 </div>
 
-                                <!-- <div class="wishlist-share">
-
-                                    <div class="social-icons social-icons-sm mb-2">
-                                    <label class="social-label">Total Order:</label>0</div> -->
-                                    
-                                    <!-- End .soial-icons -->
-                                <!-- </div> -->
-
-                            <% } %>
-
-                            </div>
-
+                            </div> <!-- container-fluid -->
                         </div>
 
-                    </aside>
+                    </div>
+                    <!-- end main content-->
 
-                              </div>
+                </div>
 
-                          </div><!-- End .col-lg-9 -->
-                      </div><!-- End .row -->
-                  </div><!-- End .container -->
-              </div><!-- End .dashboard -->
-            </div>
+        </div>
 
-        </main>
-
-  <!-- Connect Footer -->
-  <%- include('../layouts/footbar-2') %>
-  <!-- Connect Footer -->
+    </div>
 
 </div>
 
-<button id="scroll-top" title="Back to Top">
+<%- include('../layouts/footbar-2.ejs') %>
 
-  <i class="icon-arrow-up"></i>
-
-</button>
-
-<!--Connect Mobaile View-->
-<%- include('../layouts/mobileView.ejs') %>
-<!--Connect Mobaile View-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- Plugins JS File -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/jquery.hoverIntent.min.js"></script>
-<script src="assets/js/jquery.waypoints.min.js"></script>
-<script src="assets/js/superfish.min.js"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<!-- Main JS File -->
-<script src="assets/js/main.js"></script>
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 
-
-
     function cancelProduct(Idd, ordId , index) {
+
+    console.log('reached cancel product');
     console.log(Idd, ordId, index);
 
     fetch(`/cancelProduct?id=${Idd}&ordId=${ordId}&index=${index}`, {
@@ -336,7 +377,8 @@
     .then(result => {
         if (result === true) {
             console.log('Product cancelled successfully');
-            var myModalElement = document.getElementById('cancelModal');
+            var myModalElement = document.getElementById('cancelModal_' + index);
+
             var modal = bootstrap.Modal.getInstance(myModalElement);
             if (modal) {
                 modal.hide();
@@ -354,7 +396,129 @@
     });
 }
 
-        
+
+
+
+function returnProduct(idd, ordId, index){
+    console.log(idd, ordId, index);
+
+        var returnReason = document.getElementById('returnReason_' + index).value;
+        var customReason = document.getElementById('customReason_' + index).value;
+
+        var reason = returnReason === 'other' ? customReason : returnReason;
+
+        console.log('Return Reason:', reason);
+
+    fetch(`/returnProduct?id=${idd}&ordId=${ordId}&index=${index}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:JSON.stringify({reason})
+    })
+    .then(res => res.json()) // Corrected: Missing parentheses after res.json
+    .then(result => {
+        if (result === true) {
+            console.log('Product returned successfully');
+            var myModalElement = document.getElementById('returnModal_' + index);
+
+            var modal = bootstrap.Modal.getInstance(myModalElement);
+            if (modal) {
+                modal.hide();
+            }
+            // Reload the page or table here
+            location.reload(); // Reloads the entire page
+            // Or call a function to reload the specific table
+            // reloadTable(); // Call a function to reload the specific table
+        } else {
+            console.error('Failed to return product:', result);
+        }
+    })
+    .catch(error => {
+        console.error('Error returning product:', error);
+    });
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var placeOrderLink = document.getElementById('placeOrderLink');
+    var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+
+    placeOrderLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default action of link click
+        confirmationModal.show(); // Show the confirmation modal
+    });
+
+    var confirmOrderButton = document.getElementById('confirmOrderButton');
+    confirmOrderButton.addEventListener('click', function() {
+        // Here you can write code to handle order placement
+        // For now, let's just close the modal
+        confirmationModal.hide();
+    });
+});
+
+
+
+function failedPaymentRetry( ordId , amount){
+    console.log(ordId , amount);
+
+    fetch('/failedPaymentRetry',{
+        method:"POST",
+        headers:{'Content-type':'application/json'},
+        body: JSON.stringify({ amount })
+    }).then(res=> res.json()).then(data=>{
+        if (data.succes) {
+                    console.log(data)
+                    let options = {
+                                    "key": `${data.key_id}`,
+                                    "amount": `${data.amount}`,
+                                    "currency": "INR",
+                                    "name": "ShoeChic",
+                                    "order_id": `${data.order_id}`,
+                                    "handler": function (response) {
+                                        // Call the second fetch on successful payment
+                                        fetch('/changeStatusRetry', {
+                                            method: 'POST',
+                                            headers: { 'Content-type': 'application/json' },
+                                            body: JSON.stringify({ ordId })
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                location.reload();
+                                            }
+                                        });
+                                    },
+                                    "profile": {
+                                        "name": `${data.name}`,
+                                        "email": `${data.email}`
+                                    }
+                                }
+								let razorpayObject = new Razorpay(options);
+                    // razorpayObject.on('payment.success', (response) => {
+
+                    //     console.log('reached payment success');
+                    //     fetch('/changeStatusRetry',{
+                    //         method:'POST',
+                    //         headers:{'Content-type':'application/json'},
+                    //         body: JSON.stringify({ordId})
+                    //     }).then(res => res.json())
+                    //     .then(data => {
+                    //         if(data.success){
+                    //             location.reload()
+                    //         }
+                    //     })
+                    // });
+                    razorpayObject.on('payment.failed', (response) => {
+                        location.reload();
+                    });
+                    razorpayObject.open();
+    }})
+
+    
+}
+
+
 </script>
 
-<%- include('../layouts/footer') %>
+
+<%- include('../layouts/footer.ejs') %>

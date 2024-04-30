@@ -234,6 +234,78 @@ const searchProduct = async(req,res)=>{
 }
 
 
+/*const advancedSearch = async (req, res) => {
+    try {
+        const selectedCategories = req.body.categories; // Selected category filters
+        const selectedBrands = req.body.brands; // Selected brand filters
+
+        console.log(selectedCategories , selectedBrands);
+
+        let query = {};
+
+        // // Add search query if provided
+        // if (searchData) {
+        //     query.productName = { $regex: searchData, $options: 'i' };
+        // }
+
+        // Add category filters if provided
+        if (selectedCategories && selectedCategories.length > 0) {
+            query.catogory = { $in: selectedCategories };
+        }
+
+        // Add brand filters if provided
+        if (selectedBrands && selectedBrands.length > 0) {
+            query.brand = { $in: selectedBrands };
+        }
+
+        // Fetch filtered products from the database
+        const filteredProducts = await product.find(query);
+
+        // Return filtered products
+        res.json(filteredProducts);
+    } catch (error) {
+        console.error('Error searching products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};*/
+
+const advancedSearch = async (req, res) => {
+    try {
+        const selectedCategories = req.body.categories; // Selected category filters
+        const selectedBrands = req.body.brands; // Selected brand filters
+        const minPrice = req.body.minPrice; // Minimum price range
+        const maxPrice = req.body.maxPrice; // Maximum price range
+
+        console.log(selectedCategories, selectedBrands, minPrice, maxPrice);
+
+        let query = {};
+
+        // Add category filters if provided
+        if (selectedCategories && selectedCategories.length > 0) {
+            query.catogory = { $in: selectedCategories };
+        }
+
+        // Add brand filters if provided
+        if (selectedBrands && selectedBrands.length > 0) {
+            query.brand = { $in: selectedBrands };
+        }
+
+        // Add price range filter
+        query.price = { $gte: minPrice, $lte: maxPrice };
+
+        // Fetch filtered and sorted products from the database
+        const filteredProducts = await product.find(query).sort({ price: 1 }); // Sort by price in ascending order
+
+        // Return filtered and sorted products
+        res.json(filteredProducts);
+    } catch (error) {
+        console.error('Error searching products:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+
 
 
 
@@ -249,5 +321,6 @@ module.exports = {
     deleteProduct,
     loadEditProduct,
     editProduct,
-    searchProduct
+    searchProduct,
+    advancedSearch
 }

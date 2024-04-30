@@ -29,7 +29,7 @@
 
                             <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 
-								<form action="/signup" method="post">
+								<form id="signupForm" action="/signup" method="post">
 
 										<div class="text-center ">
 											<p class="text-danger ">
@@ -41,45 +41,54 @@
 											</p>
 										</div>
 
-									<div class="form-group">
-										<label for="register-fullname">Full Name *</label>
-										<input type="text" class="form-control" id="register-fullname" name="fullname" oninput="hello(this)" required>
-									</div><!-- End .form-group -->
+										<div class="form-group">
+											<label for="register-fullname">Full Name *</label>
+											<input type="text" class="form-control" id="register-name-2" name="fullname" oninput=" validateInput(this)">
+											<div class="error-message" id="name-error"></div>
+										</div>
+										<!-- End .form-group -->
 
-									<div class="form-group">
-										<label for="register-email-2">Email Address *</label>
-										<input type="email" class="form-control" id="register-email-2" name="email" oninput="hello(this)" required>
-									</div><!-- End .form-group -->
 
-									<div class="form-group">
-										<label for="register-phone">Phone Number *</label> 
-										<input type="text" class="form-control" id="register-phone" minlength="10" pattern="[0-9]{10,}" name="phone" oninput="hello(this)" required>
-									</div><!-- End .form-group -->
+										<div class="form-group">
+											<label for="register-email-2">Email Address *</label>
+											<input type="email" class="form-control" id="register-email-2" name="email">
+											<div class="error-message" id="email-error"></div>
+										</div>
+										<!-- End .form-group -->
 
-									<div class="form-group">
-										<label for="register-password-2">Password *</label>
-										<input type="password" class="form-control" id="register-password-2" name="password" oninput="hello(this)" required>
-									</div><!-- End .form-group -->
+										<div class="form-group">
+											<label for="register-phone">Phone Number *</label>
+											<input type="text" class="form-control" id="register-mobile" name="phone" oninput="isValidPhoneNumber(this);" onkeypress="return Numbers(event)">
+											<div class="error-message" id="mobile-error"></div>
+										</div>
+										<!-- End .form-group -->
 
-									<div class="form-group">
-										<label for="register-confirm-password">Confirm Password *</label>
-										<input type="password" class="form-control" id="register-confirm-password" name="confirmPassword" oninput="hello(this)" required>
-									</div><!-- End .form-group -->
+										<div class="form-group">
+											<label for="register-password-2">Password *</label>
+											<input type="password" class="form-control" id="register-password-2" name="password">
+											<div class="error-message" id="password-error"></div>
+										</div>
+										<!-- End .form-group -->
 
-									<div class="form-footer">
+										<div class="form-group">
+											<label for="register-confirm-password">Confirm Password *</label>
+											<input type="password" class="form-control" id="register-confirm-password" name="confirmPassword">
+											<div class="error-message" id="confirm-password-error"></div>
+										</div>
+										<!-- End .form-group -->
 
-										<button type="submit" class="btn btn-outline-primary-2 submits">
+										<div class="form-footer">
+											<button type="button" class="btn btn-outline-primary-2 submit submits" onclick="formValidation()">
+												<span>SIGN UP</span>
+												<i class="icon-long-arrow-right"></i>
+											</button>
+											<div class="custom-control custom-checkbox">
+												<input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+												<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
+											</div>
+											<!-- End .custom-checkbox -->
+										</div>
 
-											<span>SIGN UP</span>
-
-											<i class="icon-long-arrow-right"></i>
-
-										</button>
-
-										<div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input" id="register-policy-2" required>
-											<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
-										</div><!-- End .custom-checkbox -->
 									</div><!-- End .form-footer -->
 									<p class="text-danger"><%= dupUserMessage %></p>
 								</form>
@@ -130,34 +139,108 @@
 		
 		<script>
 	
-		const submits=document.querySelector('.submits');
-		
-		function hello(e){
+				function formValidation() {
+				var fullName = document.getElementById('register-name-2').value;
+				var email = document.getElementById('register-email-2').value;
+				var phone = document.getElementById('register-mobile').value;
+				var password = document.getElementById('register-password-2').value;
+				var confirmPassword = document.getElementById('register-confirm-password').value;
+
+				//full name
+				if (fullName.trim() === '' || fullName.trim().length < 4) {
+					
+					showError('Please enter a valid name (minimum 4 characters)', 'name-error');
+					return false;
+				
+				} else {
+				
+					clearError('name-error');
 			
-			if(e.value.trim()=='' ){
+				}
+
+				// email
 				
-				submits.style.pointerEvents = 'none';
-				submits.style.opacity = 0.6;
+				var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+				if (!emailRegex.test(email) || !email.endsWith("@gmail.com")) {
+					
+					showError('Please enter a valid Gmail address.', 'email-error');
+					
+					return false;
 				
-			}else{
+				} else {
 				
-				submits.style.opacity = 1;
-				submits.style.pointerEvents = 'all'
+					clearError('email-error');
+			
+				}
+
+				//  phone number
 				
+				var phonePattern = /^\d{10}$/;
+				
+				if (phone.trim() === '' || !phonePattern.test(phone) || !isValidPhoneNumber(phone)) {
+				
+					showError('Please enter a valid 10-digit phone number', 'mobile-error');
+					
+					return false;
+			
+				} else {
+				
+					clearError('mobile-error');
+			
+				}
+
+				// password
+				
+				if (password.trim() === '' || password.trim().length < 4) {
+
+					showError('Please enter a valid password (minimum 4 characters)', 'password-error');
+				
+					return false;
+				
+				} else {
+				
+					clearError('password-error');
+			
+				}
+
+				// Validate confirm password
+
+				if (confirmPassword.trim() === '' || confirmPassword !== password) {
+					showError('Passwords do not match', 'confirm-password-error');
+					return false;
+				} else {
+					clearError('confirm-password-error');
+				}
+
+				// If all validations pass, submit the form
+				document.getElementById('signupForm').submit();
 			}
 
-			if(e.value.trim().length < 4){
-
-				submits.style.pointerEvents = 'none';
-				submits.style.opacity = 0.6;
-				
-			}else{
-				
-				submits.style.opacity = 1;
-				submits.style.pointerEvents = 'all'
-				
+			function showError(message, errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = message;
+				errorElement.style.color = 'red'; // Set color to red
 			}
-		}
+
+			function clearError(errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = ''; // Clear error message
+			}
+
+
+			function isValidPhoneNumber(phone) {
+			// Check if all digits are the same
+			if (/^(\d)\1+$/.test(phone)) {
+				return false;
+			}
+			return true;
+			}
+
+			function Numbers(event) {
+			const key = event.key;
+			return (key >= '0' && key <= '9');
+			}
 		
 		</script>
 		

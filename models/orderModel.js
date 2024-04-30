@@ -80,9 +80,12 @@ const Order = mongoose.Schema({
                 
             type: String,
             required: true,
-            enum: ['pending', 'shipped', 'delivered', 'canceled'],
+            enum: ['pending', 'shipped', 'delivered', 'canceled' , 'Payment Failed'],
             default: 'pending',
 
+        },
+        reasonOfReturn:{
+            type:String
         }
     }],
 

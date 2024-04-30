@@ -26,8 +26,11 @@
                         <div class="products mb-3">
                             <div id="searched" class="row justify-content-center">
                                 <% product.forEach(item => { %>
-                                    
-                                    <div class="col-6 col-md-4 col-lg-4">
+
+                                    <% 
+                                    if(item.quantity > 0){
+                                        %>
+                                        <div class="col-6 col-md-4 col-lg-4">
                                         <div class="product product-7 text-center">
                                             <figure class="product-media">
                                                 <span class="product-label label-new">New</span>
@@ -40,7 +43,7 @@
                                                 </div><!-- End .product-action-vertical -->
     
                                                 <div class="product-action">
-                                                    <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                    <a  href="#" class="btn-product btn-cart"><span>add to cart</span></a>
                                                 </div><!-- End .product-action -->
                                             </figure><!-- End .product-media -->
     
@@ -63,6 +66,50 @@
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
                                     </div><!-- End .col-sm-6 col-lg-4 -->
+                                    <%
+                                    }else{
+
+                                        %>
+                                        <div class="col-6 col-md-4 col-lg-4" style="pointer-events: none; background-color: #f8f9fa; color: gray ;filter: grayscale(100%); opacity: 0.5; ">
+                                        <div class="product product-7 text-center">
+                                            <figure class="product-media">
+                                                <span class="product-label label-new">New</span>
+                                                <a href='/productdetails?id=<%=item._id%>' >
+                                                    <img src="/productImage/<%= item.productImage[0]%>" alt="Product image" class="product-image">
+                                                </a>
+    
+                                                <div class="product-action-vertical">
+                                                    <a href="/addToWhishlist?id=<%=item._id%>" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                                </div><!-- End .product-action-vertical -->
+    
+                                                <div class="product-action">
+                                                    <a  href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                </div><!-- End .product-action -->
+                                            </figure><!-- End .product-media -->
+    
+                                            <div class="product-body text-dark">
+                                                <div class="product-cat">
+                                                    <a href="#" class="text-dark"><%= item.productName%></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="/products"><%= item.catogory%></a></h3><!-- End .product-title -->
+                                                <div class="product-price">
+                                                    $<%= item.price%>.00
+                                                </div><!-- End .product-price -->
+                                                <!-- <div class="ratings-container"> -->
+                                                    <!-- <div class="ratings"> -->
+                                                        <!-- <div class="ratings-val" style="width: 20%;"></div>End .ratings-val -->
+                                                    <!-- </div>End .ratings -->
+                                                    <!-- <span class="ratings-text">( 2 Reviews )</span> -->
+                                                <!-- </div>End .rating-container -->
+    
+                                               
+                                            </div><!-- End .product-body -->
+                                        </div><!-- End .product -->
+                                    </div><!-- End .col-sm-6 col-lg-4 -->
+                                    <%
+                                    }
+                                        
+                                        %>
                                <% }); %>
 
 
@@ -128,98 +175,66 @@
                                 <a href="#" class="sidebar-filter-clear">Clean All</a>
                             </div><!-- End .widget widget-clean -->
 
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
-                                        Category
-                                    </a>
-                                </h3><!-- End .widget-title -->
-
                             <div class="collapse show" id="widget-1">
-                                    <div class="widget-body">
-                                        <div class="filter-items filter-items-count">
-                                           
-                                                <% categoryData.forEach(value => { %>
-                                    
-                                                     <div class="filter-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" class="custom-control-input" id="cat-7">
-                                                        <label class="custom-control-label" for="cat-7"><%= value.categoryName %></label>
-                                                    </div><!-- End .custom-checkbox -->
-                                                    <span class="item-count">1</span>
+                                <h5>Catogeries</h5>
+                                <div class="widget-body">
+                                    <div class="filter-items filter-items-count">
+                                        <% categoryData.forEach((value, index) => { %>
+                                            <div class="filter-item">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input name="category" type="checkbox" class="custom-control-input" id="cat-<%= index %>" value="<%= value.categoryName %>">
+                                                    <label class="custom-control-label" for="cat-<%= index %>"><%= value.categoryName %></label>
+                                                </div><!-- End .custom-checkbox -->
+                                                <span class="item-count">1</span>
+                                            </div><!-- End .filter-item -->
+                                        <% }); %>
+                                    </div><!-- End .filter-items -->
+                                </div><!-- End .widget-body -->
+                            </div><!-- End .collapse -->
 
-                                                </div><!-- End .filter-item -->
-                                             <%  }); %>
+                            <div class="collapse show" id="widget-4">
+                                <h5>brands</h5>
+                                <div class="widget-body">
+                                    <div class="filter-items filter-items-count">
+                                        <% brandData.forEach((value, index) => { %>
+                                            <div class="filter-item">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input name="brand" type="checkbox" class="custom-control-input" id="brand-<%= index %>" value="<%= value.brandName %>">
+                                                    <label class="custom-control-label" for="brand-<%= index %>"><%= value.brandName %></label>
+                                                </div><!-- End .custom-checkbox -->
+                                                <span class="item-count">1</span>
+                                            </div><!-- End .filter-item -->
+                                        <% }); %>
+                                    </div><!-- End .filter-items -->
+                                </div><!-- End .widget-body -->
+                            </div><!-- End .collapse -->
 
-                                           
-                                        
-                                    <!-- </div>End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-
-                           
-
-                           
-
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-4" role="button" aria-expanded="true" aria-controls="widget-4">
-                                        Brand
-                                    </a>
-                                </h3><!-- End .widget-title -->
-
-                                <div class="collapse show" id="widget-4">
-                                    <div class="widget-body">
-                                        <div class="filter-items filter-items-count">
-                                            
-                                            <% brandData.forEach(value => { %>
-                                    
-                                                <div class="filter-item">
-                                               <div class="custom-control custom-checkbox">
-                                                   <input type="checkbox" class="custom-control-input" id="cat-7">
-                                                   <label class="custom-control-label" for="cat-7"><%= value.brandName %></label>
-                                               </div><!-- End .custom-checkbox -->
-                                               <span class="item-count">1</span>
-
-                                           </div><!-- End .filter-item -->
-                                        <%  }); %>
-
-                                            
-                                        </div><!-- End .filter-items -->
-                                    </div><!-- End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
-                                        Price
-                                    </a>
-                                </h3><!-- End .widget-title -->
-
-                                <div class="collapse show" id="widget-5">
-                                    <div class="widget-body">
+                            <div class="collapse show" id="widget-price">
+                                <div class="widget-body">
                                     <div class="filter-price">
                                         <div class="filter-price-text">
                                             Price Range:
                                             <span id="filter-price-range"></span>
                                         </div><!-- End .filter-price-text -->
-                        
+
                                         <div class="price-inputs">
-                                            <input  type="number" id="min-price" name="min-price" placeholder="Min Price">
+                                            <input type="number" id="min-price" name="min-price" placeholder="Min Price">
                                             <input type="number" id="max-price" name="max-price" placeholder="Max Price">
                                         </div><!-- End .price-inputs -->
-                                        
+
                                         <div id="price-slider"></div><!-- End #price-slider -->
                                     </div><!-- End .filter-price -->
-                        
+
                                     <div class="submit-button">
-                                        <button type="submit" class="rounded-pill bg-warning text-white px-4 border-0 ">Apply</button>
+                                        <button type="submit" onclick="advancedSearch()" class="rounded-pill bg-warning text-white px-4 border-0">Apply</button>
                                     </div><!-- End .submit-button -->
                                 </div><!-- End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .sidebar sidebar-shop -->
+                            </div><!-- End .collapse -->
+
+
+                        </div>
+
+                            
                     </aside><!-- End .col-lg-3 -->
 
                 </div><!-- End .row -->
@@ -310,6 +325,104 @@
 })
 
     }
+
+
+    function advancedSearch() {
+    // Get selected category checkboxes
+    const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked')).map(checkbox => checkbox.value);
+
+    // Get selected brand checkboxes
+    const selectedBrands = Array.from(document.querySelectorAll('input[name="brand"]:checked')).map(checkbox => checkbox.value);
+
+    // Get minimum and maximum price values
+    const minPrice = document.getElementById('min-price').value;
+    const maxPrice = document.getElementById('max-price').value;
+
+    // Include minimum and maximum price values in request body if provided
+    const requestBody = {
+        categories: selectedCategories,
+        brands: selectedBrands
+    };
+    if (minPrice == '' && maxPrice == '') {
+        requestBody.minPrice = 0;
+        requestBody.maxPrice = 100000000000;
+    }else{
+        requestBody.minPrice = minPrice;
+        requestBody.maxPrice = maxPrice;
+    }
+
+    // Send selected filters to server
+    fetch('/advancedSearch', {
+        method: 'PUT',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody)
+    })
+
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        const x = document.getElementById('searched');
+        if (data) {
+            x.innerHTML = data.map(product => (
+                `
+                <div class="col-6 col-md-4 col-lg-4">
+                    <div class="product product-7 text-center">
+                        <figure class="product-media">
+                            <span class="product-label label-new">New</span>
+                            <a href='/productdetails?id=${product._id}' >
+                                <img src="/productImage/${product.productImage[0]}" alt="Product image" class="product-image">
+                            </a>
+
+                            <div class="product-action-vertical">
+                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                            </div><!-- End .product-action-vertical -->
+
+                            <div class="product-action">
+                                <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
+                            </div><!-- End .product-action -->
+                        </figure><!-- End .product-media -->
+
+                        <div class="product-body text-dark">
+                            <div class="product-cat">
+                                <a href="#" class="text-dark">${product.productName}</a>
+                            </div><!-- End .product-cat -->
+                            <h3 class="product-title"><a href="/products">${product.catogory}</a></h3><!-- End .product-title -->
+                            <div class="product-price">
+                                $${product.price}.00
+                            </div><!-- End .product-price -->
+                            <div class="ratings-container">
+                                <div class="ratings">
+                                    <div class="ratings-val" style="width: 20%;"></div><!-- End .ratings-val -->
+                                </div><!-- End .ratings -->
+                                <span class="ratings-text">( 2 Reviews )</span>
+                            </div><!-- End .rating-container -->
+                        </div><!-- End .product-body -->
+                    </div><!-- End .product -->
+                </div><!-- End .col-sm-6 col-lg-4 -->
+                `
+            )).join('');
+        } else {
+            // Handle case where no data is returned
+        }
+    })
+    .catch(error => {
+        console.error('Error performing advanced search:', error);
+    });
+}
+
+// Attach event listeners to category checkboxes
+document.querySelectorAll('input[id^="cat-"]').forEach(checkbox => {
+    checkbox.addEventListener('change', advancedSearch);
+});
+
+// Attach event listeners to brand checkboxes
+document.querySelectorAll('input[id^="brand-"]').forEach(checkbox => {
+    checkbox.addEventListener('change', advancedSearch);
+});
+
+
+
+
 </script>
 
 

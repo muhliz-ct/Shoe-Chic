@@ -1,27 +1,26 @@
 const wishlist = require('../models/whistlistModel');
 const category = require('../models/categoryModel');
+const cart = require('../models/cartModel')
 const product = require('../models/productModel');
 
 const loadWishlist = async (req, res) => {
     try {
         const sessionUserId = req.session.user._id;
+
+        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
         
-        // Fetch category data
         const catData = await category.find({ categoryName: { $exists: true } });
 
-        // Fetch wishlist data and populate products
         const wishlistData = await wishlist.findOne({ userId: sessionUserId }).populate('products.productId');
 
-        // Extract products from wishlist data
         const productsInWishlist = wishlistData ? wishlistData.products.map(item => item.productId) : [];
 
         console.log(`this is product details from whishlist ${productsInWishlist}`);
 
-        // Render wishlist page with wishlist data and category data
-        res.render('wishlist', {login:req.session.user , wishlistData: productsInWishlist, categoryData: catData });
+        res.render('wishlist', {login:req.session.user , wishlistData: productsInWishlist, categoryData: catData , cartData:Data});
     } catch (error) {
         console.error(error.message);
-        // Handle error rendering wishlist page
+
         res.status(500).send('Server Error');
     }
 };

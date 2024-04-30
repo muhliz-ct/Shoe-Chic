@@ -25,6 +25,10 @@ const productController = require('../controllers/productController');
 
 const whishlistController = require('../controllers/whishlistController');
 
+const walletController = require('../controllers/walletController');
+
+const couponController = require('../controllers/couponController');
+
 userRoute.get('/',auth.checkBlockUser,userController.loadHome);//home page route
 
 
@@ -70,6 +74,8 @@ userRoute.post('/passwordVerify',userController.changeForgotPassword);
 
 userRoute.get('/checkout',userController.loadCheckout);
 userRoute.post('/verifyChekutAdss',addressController.saveAddress);
+userRoute.put('/couponApply',couponController.applyCoupon);
+userRoute.post('/couponUse',couponController.couponUse);
 
 
 
@@ -81,8 +87,11 @@ userRoute.post('/chooseAddress',addressController.chooseAddress);
 
 
 
-userRoute.post('/getOrder/cod',orderController.placeOrder);
-// userRoute.post('/getOrder/razorpay',orderController.plc);
+userRoute.post('/getOrder',orderController.placeOrder);
+userRoute.post('/razor',orderController.placeOrderRazor);
+userRoute.post('/razorFailed',orderController.razorFailure);
+userRoute.post('/failedPaymentRetry',orderController.failedPaymentRetry)
+userRoute.post('/changeStatusRetry',orderController.changeStatusRetry)
 
 
 userRoute.get('/orders',orderController.loadOrder);
@@ -91,6 +100,7 @@ userRoute.get('/orders',orderController.loadOrder);
 userRoute.get('/orderDetails',orderController.loadOrderDetails);
 
 userRoute.get('/cancelProduct',orderController.cancelProduct);
+userRoute.post('/returnProduct',orderController.returnProduct)
 
 
 userRoute.get('/wishlist',whishlistController.loadWishlist);
@@ -98,19 +108,29 @@ userRoute.get('/wishlist',whishlistController.loadWishlist);
 
 userRoute.get('/addToWhishlist',whishlistController.addToWishList);
 
-userRoute.get('/removeFromWishlist',whishlistController.removeFromWishlist)
+userRoute.get('/removeFromWishlist',whishlistController.removeFromWishlist);
 
 
 
+userRoute.get('/wallet',walletController.loadWallet);
+userRoute.post('/addMoneyWallet',walletController.addMoneyWallet);
+userRoute.put('/walletAdd',walletController.Recharge);
+
+
+userRoute.get('/coupon',couponController.loadCouponUser)
+
+
+userRoute.get('/invoice/:id',orderController.loadInvoice);
 
 //Login With Google
-userRoute.get('/auth/google', googleLogin.googleAuth);
+userRoute.get('/auth/google',userAuth.isLogin, googleLogin.googleAuth);
 
 
-userRoute.get("/auth/google/callback", googleLogin.googleCallback, googleLogin.setupSession);
+userRoute.get("/auth/google/callback",userAuth.isLogin, googleLogin.googleCallback, googleLogin.setupSession);
 
 
-userRoute.put('/searchProduct',productController.searchProduct)
+userRoute.put('/searchProduct',productController.searchProduct);
+userRoute.put('/advancedSearch',productController.advancedSearch);
 
 
 

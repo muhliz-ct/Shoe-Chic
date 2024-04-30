@@ -1,0 +1,249 @@
+<%- include('../layouts/header') %>
+
+<div class="page-wrapper" id="reloadDiv">
+
+  <%- include('../layouts/navbar-1.ejs') %>
+
+  <main class="main">
+
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+      <div class="container">
+        <h1 class="page-title">My Profile</h1>
+      </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Wallet</li>
+        </ol>
+      </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+
+      <div class="dashboard">
+
+        <div class="container">
+
+          <div class="row">
+
+            <aside class="col-md-4 col-lg-3">
+
+              <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-dashboard-link" href="/profile">My Profile</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-orders-link" href="/orders" role="tab">Orders</a>
+                </li>
+
+                <!-- <li class="nav-item">
+                                    <a class="nav-link" id="tab-downloads-link"  href="#" role="tab" >Wishlist</a>
+                                </li> -->
+
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-address-link" href="/address">Adresses</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link active" id="tab-wallet-link" href="/wallet" role="tab">Wallet</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" id="tab-coupons-link" href="/coupen" role="tab">Coupons</a>
+                </li>
+
+                <li class="nav-item">
+
+                  <a class="nav-link " href="">Sigout</a>
+
+                </li>
+
+              </ul>
+
+            </aside>
+
+            <div class="col-md-8 col-lg-9">
+
+              <div class="tab-content">
+
+                <aside class="col col-xl-9 col-lg-8 col-md-6 col-sm-6 mb-4 mb-lg-0">
+
+                  <div class="row w-100" style="gap: 2rem">
+
+                    <div class="container">
+
+                      <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addMoneyModal">
+                        Add Money
+                      </button>
+
+                      <% if (userWallet?.transaction.length >= 1) { %>
+
+                      <table class="table table-wishlist table-mobile text-center" style="width: 920px">
+
+                        <thead>
+
+                          <tr>
+
+                            <th scope="col" style="color: black;">No</th>
+                            <th scope="col" style="color: black;">Amount</th>
+                            <th scope="col" style="color: black;">Time</th>
+                            <th scope="col" style="color: black;">Credit Or Debit</th>
+
+                          </tr>
+
+                        </thead>
+
+                        <% userWallet?.transaction.forEach((element, index) => { %>
+
+                        <tbody>
+
+                          <tr>
+                            <td>
+                              <%= index + 1 %>
+                            </td>
+
+                            <td class="text-primary">
+                              $<%= element.amount %>
+                            </td>
+
+                            <td>
+                              <%= element.time.toString().split(' ').slice(0,5).join('  ') %>
+                            </td>
+
+                            <td class="<%= element.Action == 'Credit' ? 'text-success' : 'text-danger'%>">
+                              <%= element.Action %>
+                            </td>
+
+                          </tr>
+
+
+                        </tbody>
+
+                        <% }); %>
+
+                      </table>
+
+                      <% if(locals.userWallet) {%>
+
+                      <div class="wishlist-share">
+
+                        <div class="social-icons social-icons-sm mb-2">
+
+                          <label class="social-label text-primary">Total:</label>
+
+                          <p class="text-primary ">$<%= userWallet?.walletBalance %></p>
+
+                        </div><!-- End .soial-icons -->
+
+                      </div>
+
+                      <% } %>
+
+                      <% } else { %>
+
+                      <p class="text-primary">Wallet Not Found</p>
+
+                      <% } %>
+
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+  </main><!-- End .main -->
+
+  <!-- Add Money Modal -->
+  <div class="modal fade" id="addMoneyModal" tabindex="-1" role="dialog" aria-labelledby="addMoneyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addMoneyModalLabel">Add Money to Wallet</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form  action="/addMoneyWallet" method="post" id="addMoneyForm">
+            <div class="form-group">
+              <label for="amount">Amount:</label>
+              <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter amount">
+            </div>
+            <button type="button" onclick="addMoney()" class="btn btn-primary">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Add Money Modal -->
+
+  <!-- End .main -->
+
+  <!-- Connect Footer -->
+  <%- include('../layouts/footbar-2') %>
+  <!-- Connect Footer -->
+
+</div>
+
+<button id="scroll-top" title="Back to Top">
+
+  <i class="icon-arrow-up"></i>
+
+</button>
+
+<!--Connect Mobaile View-->
+<%- include('../layouts/mobileView.ejs') %>
+<!--Connect Mobaile View-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Plugins JS File -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    function addMoney(){
+        const form = document.getElementById('addMoneyForm')
+        const n = document.getElementById('amount').value   
+        fetch('/walletAdd',{method:'put',headers:{'Content-type':'application/json'},body:JSON.stringify({amt:n})})
+        .then(res => res.json())
+        .then(data => {
+          if(data.success){
+            let options = {
+             "key": `${data.key_id}`,
+             "amount": `${data.amount}`,
+             "currency": "INR",
+             "name": "Shoe Chic",
+             "handler": function (response) {
+                 form.submit();
+
+             },
+             "profile": {
+                 "name": `${data.name}`,
+                 "email": `${data.email}`
+             }
+            }
+            let razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', (response) => {
+                      
+                    });
+                    razorpayObject.open();
+          }
+        })   
+      }
+</script>
+
+<%- include('../layouts/footer') %>

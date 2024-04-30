@@ -1,35 +1,24 @@
-<div class="confetti " style="z-index: -122;">
+.then(res => res.json()).then(data => {
+    if (data.succes) {
+        console.log(data)
+        let options = {
+                        "key": ${data.key_id},
+                        "amount": ${data.amount},
+                        "currency": "INR",
+                        "name": "Audix",
+                        "order_id": ${data.order_id},
+                        "handler": function (response) {
+                            form.submit();
+                            
+                        },
+                        "profile": {
+                            "name": ${data.name},
+                            "email": ${data.email}
+                        }
+                    }
 
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-    <div class="confetti-piece"></div>
-</div>
-<div class="container-fluid " style="padding: 7%;"style="z-index: 222;">
-<div class="thanks-note justify-content-center " id="thanksNote" >
-<div class=" text-center p-5 ">
-<h1>Thank You!</h1>
-<p>Your order has been successfully placed.</p><br>
-<a href="/" class="btn btn-outline-success rounded-pill ">Continue shopping</a>
-
-</div>
-</div>
-</div>
-
-
-
-
-<!-- Connect Footer -->
-<%- include('../layouts/footbar-1') %>
-<!-- Connect Footer -->
-
-</div><!-- End .page-wrapper -->
+        let razorpayObject = new Razorpay(options);
+        razorpayObject.on('payment.failed', (response) => {
+           
+        });
+        razorpayObject.open();

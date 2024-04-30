@@ -29,14 +29,21 @@ const couponModel = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
-    expiryDate:{
-        type:Date,
-        default:Date.now
+    expiryDate: {
+        type: Date,
+        default: function() {
+            const currentDate = new Date();
+            const expiryDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+            return expiryDate;
+        }
     },
     status:{
         type:Boolean,
         default:true
-    }
+    },
+    userId:[
+        
+    ]
 })
 
 

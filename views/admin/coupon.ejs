@@ -26,15 +26,18 @@
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                   <% if (coupons && coupons.length > 0) { %>
                     <% coupons.forEach(coupon => { %>
-                      <div class="col ">
-                        <div class="card bg-image" style="width: 300px; height: 200px; background-image: url('/productImage/<%= coupon.coupanImage %>'); background-size: cover; background-position: center; padding: 1rem;">
-                          <div class="card-body text-dark font-weight-bold">
-                            <h5 class="card-title text-dark font-weight-bold"><%= coupon.couponName %> (<%= coupon.couponCode %>)</h5>
-                            <p class="card-text">Discount: <%= coupon.discount %>%</p>
-                            <p class="card-text">Valid for purchases between <%= coupon.from %> and <%= coupon.to %></p>
-                          </div>
+                      <div class="col p-2">
+                        <div class="card bg-image" style="width: 300px; height: 200px; background-image: url('/productImage/<%= coupon.coupanImage %>'); background-size: cover; background-position: center; padding: 1rem; position: relative;">
+                            <!-- 'x' button for deleting the coupon -->
+                            <button type="button" onclick="deleteCoupon('<%= coupon._id %>')" class="btn rounded-pill btn-danger" aria-label="Close" style="position: absolute; top: 0; right: 0;">x</button>
+                            <div class="card-body text-dark font-weight-bold">
+                                <h5 class="card-title text-dark font-weight-bold"><%= coupon.couponName %> (<%= coupon.couponCode %>)</h5>
+                                <p class="card-text">Discount: <%= coupon.discount %>%</p>
+                                <p class="card-text">Valid for purchases between <%= coupon.from %> and <%= coupon.to %></p>
+                            </div>
                         </div>
-                      </div>
+                    </div>
+                    
                     <% }) %>
                   <% } else { %>
                     <p>No coupons found.</p>
@@ -153,6 +156,21 @@
     document.getElementById('addCouponBtn').addEventListener('click', function() {
         showAddCouponModal();
     });
+
+
+    function deleteCoupon(coupId){
+      console.log('reached delete coupon function');
+      fetch('/admin/deleteCoupon',{
+        method:'POST',
+        headers:{'Content-type':'application/json'},
+        body: JSON.stringify({coupId})
+      }).then(res => res.json())
+      .then(data => {
+        if(data.success){
+          location.reload()
+        }
+      })
+    }
 </script>
 
 

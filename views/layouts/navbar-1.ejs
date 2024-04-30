@@ -21,26 +21,7 @@
 
                         </li>
 
-                        <li>
-
-                            <a href="#" class="sf-with-ul" style="padding-right: 10px;">Category</a>
-                            
-                             <ul class="p-2 " >
-                                <!-- <li><a href="/category">Men's</a></li>
-                                <li><a href="/category">Women's</a></li>
-                                <li><a href="/category">Kid's</a></li> -->
-                                <%
-                                if(categoryData.length>0){
-                                    for(let i=0; i<categoryData.length; i++){
-                                        %>
-                                        <li><a href="/category"><%= categoryData[i].categoryName %></a></li>
-                                        <%
-                                    }
-                                }
-                            %>
-                            </ul>
-
-                        </li>
+                        
 
                         <li>
                             <a href="/product" style="padding-right: 10px;">Product</a>
@@ -105,7 +86,7 @@
                     
                             <form action="/logout" method="post">
 
-                                <button class="logout-button rounded-pill mt-1 text-white " style="background-color: gray; width: fit-content;" type="submit">logout</button>
+                                <button onclick="logout()" class="logout-button rounded-pill mt-1 text-white " style="background-color: gray; width: fit-content;" type="submit">logout</button>
                             
                             </form>
                         
@@ -215,3 +196,23 @@
         </div><!-- End .container -->
     </div><!-- End .header-middle -->
 </header><!-- End .header -->
+
+<script>
+
+    function logout() {
+    // Clear cookies
+    document.cookie.split(";").forEach(function(c) {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    // Clear localStorage
+    localStorage.clear();
+
+    // Clear sessionStorage
+    sessionStorage.clear();
+
+    // Redirect the user to the logout page
+    window.location.href = "/logout";
+}
+    
+</script>
