@@ -77,8 +77,6 @@ const loadOrder = async (req, res) => {
 
 
 
-
-
 // placing an order at user side
 const placeOrder = async (req, res) => {
     try {
@@ -480,11 +478,11 @@ const cancelProduct = async (req, res) => {
             });
 
             
-            const newTotalOrderAmount = orderData.orderAmount - sum;
-            await order.findOneAndUpdate(
-                { _id: orderId },
-                { $set: { orderAmount: newTotalOrderAmount } }
-            );
+            // const newTotalOrderAmount = orderData.orderAmount - sum;
+            // await order.findOneAndUpdate(
+            //     { _id: orderId },
+            //     { $set: { orderAmount: newTotalOrderAmount } }
+            // );
 
             currentQuantity += quantity;
 

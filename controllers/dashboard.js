@@ -1,17 +1,11 @@
-//  Import Product Model :-
+
 const product = require('../models/productModel');
-
-//  Import Order Model :-
 const order = require('../models/orderModel');
-
-//  Import User Model :-
 const user = require('../models/userModel');
-
-//  Import Category Modal :-
 const category = require("../models/categoryModel");
 
-//  loadDahboard (Get Method) :-
 
+//load dashboard at admin side
 const loadDahboard = async (req, res , next) => {
     
     try {
@@ -188,14 +182,12 @@ const loadDahboard = async (req, res , next) => {
   
   };
 
-
-
-
+//year wise report on admin side
   const chartYear = async (req, res , next) => {
 
     try {
   
-      const curntYear = new Date().getFullYear();
+      const currentYear = new Date().getFullYear();
   
       const yearChart = await order.aggregate([
           
@@ -205,8 +197,8 @@ const loadDahboard = async (req, res , next) => {
   
             dateOfOrder: {
   
-              $gte: new Date(`${curntYear - 5}-01-01`),
-              $lte: new Date(`${curntYear}-12-31`),
+              $gte: new Date(`${currentYear - 5}-01-01`),
+              $lte: new Date(`${currentYear}-12-31`),
   
             },
   
@@ -241,8 +233,7 @@ const loadDahboard = async (req, res , next) => {
   
   };
   
-  //  Month Chart (Put Method) :-
-  
+//month wise graph report in admin
   const monthChart = async (req, res , next) => {
   
     try {
@@ -263,7 +254,7 @@ const loadDahboard = async (req, res , next) => {
         "December",
       ];
   
-      const curntYear = new Date().getFullYear();
+      const currentYear = new Date().getFullYear();
   
       const monData = await order.aggregate([
       
@@ -272,8 +263,8 @@ const loadDahboard = async (req, res , next) => {
   
             dateOfOrder: {
   
-              $gte: new Date(`${curntYear}-01-01`),
-              $lte: new Date(`${curntYear}-12-31`),
+              $gte: new Date(`${currentYear}-01-01`),
+              $lte: new Date(`${currentYear}-12-31`),
               
             },
   
