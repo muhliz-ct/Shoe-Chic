@@ -33,6 +33,8 @@ const loadReport = async(req,res)=>{
 
             const report = await order.find({dateOfOrder : { $gte: startDate, $lte: endDate } });
 
+            console.log(report);
+
             res.render("salesReport", { report, data: "Month", reportVal: req.params.id, });
 
         }else if(reportValue == 'Year'){

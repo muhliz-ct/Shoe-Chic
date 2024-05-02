@@ -23,9 +23,15 @@ const loadCart = async(req, res) => {
                     return isNaN(price) ? acc : acc + price;
                 }, 0);
 
-                const totalCartAmount = await cart.findOneAndUpdate({userId:req.session.user._id},{$set:{totalCartPrice:total}},{new:true ,upsert:true});
 
-                res.render('cart',{login:req.session.user , categoryData:catData , cartData , totalPrice:totalCartAmount.totalCartPrice});
+                const discountTotal = cartData.products.reduce((acc, product) => {
+                    const price = Number(product.discountedAmount);
+                    return isNaN(price) ? acc : acc + price;
+                }, 0);
+
+                const totalCartAmount = await cart.findOneAndUpdate({userId:req.session.user._id},{$set:{totalCartPrice:total , totalCartDiscount:discountTotal}},{new:true ,upsert:true});
+
+                res.render('cart',{login:req.session.user , categoryData:catData , cartData , totalPrice:totalCartAmount.totalCartPrice  , totalDiscount:totalCartAmount.totalCartDiscount});
             } else {
 
                 res.render('cart',{login:req.session.user , categoryData:catData , totalPrice:0});
@@ -51,6 +57,8 @@ const addToCart = async (req, res) => {
 
         let totalAmount = 0;
 
+        let totalDiscountAmount = 0;
+
         const productId = req.query.id;
 
         const currUserId = req.session.user._id;
@@ -65,8 +73,10 @@ const addToCart = async (req, res) => {
 
             if(cartProduct.offerprice > 0){
                  totalAmount = quantity * cartProduct.offerprice;
+                 totalDiscountAmount = quantity * cartProduct.discountAmount;
             }else{
                  totalAmount = quantity * cartProduct.price;    
+                 totalDiscountAmount = quantity * cartProduct.discountAmount;
             }
 
 
@@ -77,7 +87,8 @@ const addToCart = async (req, res) => {
                         products: {
                             productId: productId,
                             price: totalAmount,
-                            quantity: quantity
+                            quantity: quantity,
+                            discountedAmount:totalDiscountAmount,
                         }
                     },
                 },
@@ -136,6 +147,7 @@ const editCart = async(req,res)=>{
     try {
 
         let newValue;
+        let newDis;
 
         const productIdd = req.body.proId;
 
@@ -149,16 +161,20 @@ const editCart = async(req,res)=>{
 
         if(productData.offerprice > 0){
             newValue = productData.offerprice * quantityy;
+            newDis = productData.discountAmount * quantityy;
         }else{
              newValue = productData.price * quantityy;
+             newDis = productData.discountAmount * quantityy;
         }
         
   
-        const updatedCart = await cart.findOneAndUpdate({ _id: cartIdd, "products.productId": productIdd }, { $set: { "products.$.price": newValue, "products.$.quantity": quantityy, }, }, { new: true });
+        const updatedCart = await cart.findOneAndUpdate({ _id: cartIdd, "products.productId": productIdd }, { $set: { "products.$.price": newValue, "products.$.quantity": quantityy, "products.$.discountedAmount":newDis }, }, { new: true });
 
         const totalCartPricee = updatedCart.products.reduce((acc, product) => acc + product.price, 0);
+        
+        const totalCartDisc = updatedCart.products.reduce((acc, product) => acc + product.discountedAmount, 0);
   
-        await cart.findOneAndUpdate({ _id: cartIdd }, { $set: { totalCartPrice: totalCartPricee } });
+        await cart.findOneAndUpdate({ _id: cartIdd }, { $set: { totalCartPrice: totalCartPricee , totalCartDiscount:totalCartDisc } });
 
         res.send({ success: totalCartPricee });
         

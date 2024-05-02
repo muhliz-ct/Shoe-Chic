@@ -96,6 +96,7 @@ const applyCoupon = async(req,res)=>{
 const couponUse = async(req,res)=>{
     try {
         let newCartPrice;
+        let couponDiscount;
 
         const sessionUserId = req.session.user._id;
         const objectId =new mongoose.Types.ObjectId(sessionUserId);
@@ -108,10 +109,12 @@ const couponUse = async(req,res)=>{
         const currentAmount = cartData.totalCartPrice;
         if((currentAmount * (disc / 100)) > maxDiscount){
             newCartPrice = currentAmount - maxDiscount;
+            couponDiscount = maxDiscount;
         }else{
-            newCartPrice = currentAmount - (currentAmount * (disc / 100))
+            newCartPrice = currentAmount - (currentAmount * (disc / 100));
+            couponDiscount = currentAmount * (disc / 100);
         }
-        await cart.findOneAndUpdate({userId:sessionUserId},{$set:{totalCartPrice:newCartPrice}});
+        await cart.findOneAndUpdate({userId:sessionUserId},{$set:{totalCartPrice:newCartPrice , couponDiscount:couponDiscount}});
         await coupon.findOneAndUpdate({_id:couponCode},{$pull:{userId:objectId}});
 
         res.redirect('/checkout')

@@ -544,9 +544,15 @@
 											<td>$<%= cartData.totalCartPrice %>.00</td>
 										</tr>
 										<tr>
-											<td>Shipping:</td>
-											<td>Free shipping</td>
+											<td>Discount:</td>
+											<td>$ <%= cartData.totalCartDiscount  %></td>
 										</tr>
+
+										<tr>
+											<td>Coupon Discount:</td>
+											<td>$ <%= cartData.couponDiscount  %></td>
+										</tr>
+
 										<tr class="summary-total">
 											<td>Total:</td>
 											<td>$<%= cartData.totalCartPrice %>.00</td>

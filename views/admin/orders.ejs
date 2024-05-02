@@ -32,46 +32,58 @@
 
                   <!-- Fetch data in dbs and show -->
 
-                  <tbody class="text-center ">
+                  <tbody class="text-center">
 
                     <% if (orderData.length > 0) { %>
+                
+                        <% orderData.forEach((order , ind) => { %>
+                
+                          
+                
+                            <tr>
+                
+                                <td><%= ind + 1 %></td>
+                                <td><%= order.deliveryAddress.name %></td>
+                                <td>$<%= order.orderAmount %></td>
+                                <td><%= order.payment %></td>
+                                <td><%= order.orderStatus %></td>
+                                <td><%= order.dateOfOrder.toString().split(' ').slice(0,4).join('  ') %></td>
+                                <td>
 
-                      <% orderData.forEach((order , ind)=>{ %>
-
-                              <tr>
-
-                                  <td><%= ind + 1 %></td>
-                                  <td><%= order.deliveryAddress.name %></td>
-                                  <td>$<%= order.orderAmount %></td>
-                                  <td><%= order.payment %></td>
-                                  <td><%= order.orderStatus %></td>
-                                  <td><%= order.dateOfOrder.toString().split(' ').slice(0,4).join('  ') %></td>
-                                  <td>
-
-                                            <a href="/admin/orderDtails?id=<%= order._id %>">
-
-                                            <button type="button" class="btn btn-outline-primary btn-icon-text">
-                                            <i class="mdi mdi-file-check btn-icon-prepend"></i> View Details </button>
-
-                                            </a>
-
+                                 <% if (order.orderStatus == 'return requested') { %>
+                                  <a href="/admin/orderDtails?id=<%= order._id %>">
+                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
+                                        <i class="mdi mdi-file-check btn-icon-prepend"></i> View Details
+                                    </button>
+                                </a>
+                                 <% }else{
+                                  %>
+                                  <a href="/admin/orderDtails?id=<%= order._id %>">
+                                        <button type="button" class="btn btn-outline-primary btn-icon-text">
+                                            <i class="mdi mdi-file-check btn-icon-prepend"></i> View Details
+                                        </button>
+                                    </a>
+                                  <%
+                                 } %>
+                
+                                   
+                
                                 </td>
-                                  
-                                  
-                              </tr>
-
-
-                          <% }) %>
-
-                      <% } else { %>
-
-                          <tr>
-                              <td colspan="" class="text-danger ">Orders Not Found</td>
-                          </tr>
-
-                      <% } %>
-
-                  </tbody>
+                
+                            </tr>
+                
+                        <% }) %>
+                
+                    <% } else { %>
+                
+                        <tr>
+                            <td colspan="" class="text-danger">Orders Not Found</td>
+                        </tr>
+                
+                    <% } %>
+                
+                </tbody>
+                
               </table>
               <!-- End table -->
           </div>

@@ -26,6 +26,7 @@
 	                <div class="container">
 	                	<div class="row">
 	                		<div class="col-lg-8">
+								<h1><%= locals.totalDiscount  %></h1>
 
 								<% if (locals.cartData && locals.cartData.products.length >=1) { %>
 
@@ -175,10 +176,10 @@
 
 	                						</tr><!-- End .summary-subtotal -->
 
-	                						<!-- <tr class="summary-subtotal">
+	                						<tr class="summary-subtotal">
 	                							<td>Discount:</td>
-	                							<td>$0.00</td>
-	                						</tr>End .summary-discount -->
+	                							<td>$ <%= locals.totalDiscount %> </td>
+	                						</tr><!-- End .summary-discount -->
 
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
@@ -215,10 +216,7 @@
 	                							<td>$0.00</td>
 	                						</tr><!-- End .summary-shipping-row -->
 
-	                						<tr class="summary-shipping-estimate">
-	                							<td>Estimate for Your Country<br> <a href="/address">Change address</a></td>
-	                							<td>&nbsp;</td>
-	                						</tr><!-- End .summary-shipping-estimate -->
+	                						
 
 	                						<tr class="summary-total">
 

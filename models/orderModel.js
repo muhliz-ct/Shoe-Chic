@@ -17,6 +17,16 @@ const Order = mongoose.Schema({
     
     },
 
+    orderDiscount:{
+        type:Number,
+        default:0
+    },
+
+    couponDiscount:{
+        type:Number,
+        defaul:0
+    },
+
     payment: {
       
         type: String,
@@ -35,7 +45,7 @@ const Order = mongoose.Schema({
     orderStatus: {
         
         type: String,
-        enum: ['pending', 'shipped', 'delivered', 'canceled'],
+        enum: ['pending', 'shipped', 'delivered', 'canceled' , 'Return Requested'],
         default: 'pending'
     },
 

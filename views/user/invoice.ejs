@@ -164,8 +164,8 @@
                         <tr class="text-dark">
                             <th class="text-dark">Product Details</th>
                             <th class="text-dark">Quantity</th>
-                            <th class="text-dark">Product Price (1pc)</th>
-                            <th class="text-dark">Total Amount</th>
+                            <th class="text-dark">Product Price </th>
+                            <th class="text-dark">Item Discount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -175,12 +175,14 @@
                             <td class="col-md-9"><%= element.productId.productName %></td>
                             <td class="col-md-3"><i class="fa fa-inr"></i> <%= element.quantity %> </td>
                             <td class="col-md-3"><i class="fa fa-inr"></i> <%= element.productId.price %> </td>
-                            <td class="col-md-3"><i class="fa fa-inr"></i> <%= element.price  %> </td>
+                            <td class="col-md-3"><i class="fa fa-inr"></i> <%= orderData.orderDiscount  %> </td>
                         </tr>
                     <%}); %>
                        
                        
                           
+                           <td class="text-right">Coupon Discount: </td>
+                           <td class="text-left text-danger"><i class="fa fa-inr"></i> <%= orderData.couponDiscount  %> </td>
                            <td class="text-right"><h2><strong>Total: </strong></h2></td>
                            <td class="text-left text-danger"><h2><strong><i class="fa fa-inr"></i> <%= orderData.orderAmount  %> </strong></h2></td>
                        </tr>

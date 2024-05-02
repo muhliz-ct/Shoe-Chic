@@ -6,24 +6,64 @@ const instance = require('../config/razorPay');
 
 
 
-const loadWallet = async(req,res)=>{
+// const loadWallet = async(req,res)=>{
+//     try {
+//         const sessionUserId = req.session.user._id;
+
+//         const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
+
+//         const catData = await category.find({categoryName:{$exists:true}});
+
+//         const userWallet = await wallet.findOne({userId:sessionUserId}).sort();
+
+//         res.render('wallet',{login:req.session.user , userWallet , categoryData:catData , cartData:Data});
+
+//     } catch (error) {
+
+//         console.error(error.message);
+
+//     }
+// }
+
+let sortTransactionsByTime = async function(walletId) {
+    const wallet1 = await wallet.findById(walletId);
+    if (!wallet) {
+        throw new Error('Wallet not found');
+    }
+    // Sort transactions based on time
+    wallet1.transaction.sort((a, b) => b.time - a.time);
+    return wallet1.transaction;
+};
+
+const loadWallet = async (req, res) => {
     try {
         const sessionUserId = req.session.user._id;
 
-        const Data = await cart.findOne({userId:req.session.user._id}).populate('products.productId');
+        // Fetching cart data
+        const cartData = await cart.findOne({ userId: req.session.user._id }).populate('products.productId');
 
-        const catData = await category.find({categoryName:{$exists:true}});
+        const wallet1 = await wallet.findOne({userId:sessionUserId})
 
-        const userWallet = await wallet.findOne({userId:sessionUserId});
+        // Fetching category data
+        const categoryData = await category.find({ categoryName: { $exists: true } });
 
-        res.render('wallet',{login:req.session.user , userWallet , categoryData:catData , cartData:Data});
+        // Fetching user wallet data and sorting transactions
+        const userWallet = await wallet.findOne({ userId: sessionUserId });
+        const sortedTransactions = await sortTransactionsByTime(userWallet._id);
+        console.log(sortedTransactions);
 
+        res.render('wallet', {
+            login: req.session.user,
+            w:wallet1,
+            userWallet: sortedTransactions,
+            categoryData: categoryData,
+            cartData: cartData
+        });
     } catch (error) {
-
         console.error(error.message);
-
+        // Handle error
     }
-}
+};
 
 
 const addMoneyWallet = async(req,res)=>{

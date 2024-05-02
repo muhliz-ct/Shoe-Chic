@@ -88,6 +88,7 @@ userRoute.post('/chooseAddress',addressController.chooseAddress);
 
 
 userRoute.post('/getOrder',orderController.placeOrder);
+userRoute.get('/confirmation',orderController.loadConfirmation)
 userRoute.post('/razor',orderController.placeOrderRazor);
 userRoute.post('/razorFailed',orderController.razorFailure);
 userRoute.post('/failedPaymentRetry',orderController.failedPaymentRetry)

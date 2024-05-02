@@ -598,12 +598,12 @@ const loadProductDetails = async(req,res)=>{
                     let yy = productData.price;
                     let zz = Math.floor((yy*xx)/100);
                     let catDiscPrice = yy - zz;
-                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice , discountAmount:zz}})
                 }else{
                     let yy = productData.price;
                     let zz = Math.floor((yy*qq)/100);
                     let catDiscPrice = yy - zz;
-                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice}})
+                    await product.findOneAndUpdate({_id:productId},{$set:{offerprice:catDiscPrice , discountAmount:zz}})
                     }
                 
             }
@@ -616,7 +616,7 @@ const loadProductDetails = async(req,res)=>{
                 let discountAmount = Math.floor((y*x)/100);
                 let offerPrice = y - discountAmount;
                 console.log(offerPrice);
-                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice , discountAmount:discountAmount}})
             }
 
             if(currentCatData && currentCatData.categoryOffer > 0 ){
@@ -627,7 +627,7 @@ const loadProductDetails = async(req,res)=>{
                 let discountAmount = Math.floor((y*x)/100);
                 let offerPrice = y - discountAmount;
                 console.log(offerPrice);
-                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice}})
+                await product.findOneAndUpdate({_id:productId},{$set:{offerprice:offerPrice , discountAmount:discountAmount}})
             }
 
             res.render('productdetails',{login : req.session.user , productDetails:productData , categoryData:catData , cartData:Data});

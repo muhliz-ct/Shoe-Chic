@@ -10,7 +10,8 @@ const errorHandler = (err, req, res, next) => {
         res.status(422).send('Validation error: ' + err.message);
     } else {
         // Default error response
-        res.status(500).send('<h1 class="text-danger">Something went wrong!</h1>');
+        res.redirect('/')
+        // res.status(500).send('<h1 class="text-danger">Something went wrong!</h1>');
     }
 };
 

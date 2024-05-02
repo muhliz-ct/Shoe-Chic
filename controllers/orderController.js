@@ -107,7 +107,11 @@ const placeOrder = async (req, res) => {
         const newOrder = new order({
             userId: userId,
 
-            orderAmount: cartData.totalCartPrice,
+            orderDiscount: cartData.totalCartDiscount,
+
+            couponDiscount:cartData.couponDiscount,
+
+            orderAmount:cartData.totalCartPrice,
             payment: paymentMethod,
             deliveryAddress: userAddress.address[0],
             products: cartData.products.map(product => ({
@@ -119,6 +123,8 @@ const placeOrder = async (req, res) => {
         });
 
         await newOrder.save();
+
+        console.log(newOrder);
 
        if(newOrder){
 
@@ -137,7 +143,7 @@ const placeOrder = async (req, res) => {
         await cart.findOneAndDelete({ userId: userId });
 
 
-        res.render('confirmation',{login:req.session.user , categoryData:catData});
+        res.redirect('/confirmation');
 
     } catch (error) {
 
@@ -147,6 +153,14 @@ const placeOrder = async (req, res) => {
     }
 };
 
+//load confirmation
+const loadConfirmation = async(req,res)=>{
+    try {
+        res.render('confirmation')
+    } catch (error) {
+        console.error(error.message)
+    }
+}
 
 //plancing order using razorpay
 const placeOrderRazor = async(req,res)=>{
@@ -299,7 +313,7 @@ const razorFailure = async(req,res)=>{
 //list orders in admin side
 const listOrders = async(req,res)=>{
     try {
-        const orderDetails = await order.find({userId:{$exists:true}});
+        const orderDetails = await order.find({userId:{$exists:true}}).sort({dateOfOrder:-1}).populate('products.productId');
 
         for (const orderItem of orderDetails) {
 
@@ -307,6 +321,7 @@ const listOrders = async(req,res)=>{
             const allProductsShipped = orderItem.products.every(product => product.orderProductStatus === 'shipped');
             const allProductsDelivered = orderItem.products.every(product => product.orderProductStatus === 'delivered');
             const allProductsReturned = orderItem.products.every(product => product.orderProductStatus === 'returned');
+            const returnRequested = orderItem.products.some(product => product.orderProductStatus === 'returned requested');
             const allProductsFailed = orderItem.products.every(product => product.orderProductStatus === 'Payment Failed');
             if (allProductsCanceled) {
    
@@ -334,7 +349,12 @@ const listOrders = async(req,res)=>{
                     { _id: orderItem._id },
                     { $set: { orderStatus: 'Payment Failed' } }
                 )
-            } 
+            }  else if(returnRequested){
+                await order.findOneAndUpdate(
+                    { _id: orderItem._id },
+                    { $set: { orderStatus: 'return requested' } }
+                )
+            }
             else{
                 await order.findOneAndUpdate(
                     { _id: orderItem._id },
@@ -343,7 +363,7 @@ const listOrders = async(req,res)=>{
             }
            
         }
-        
+        console.log(orderDetails);
         res.render('orders',{orderData:orderDetails})
     } catch (error) {
         console.error(error.message);
@@ -551,12 +571,12 @@ const returnProduct = async(req,res)=>{
             if(count == orderData.products.length){
                 await order.findOneAndUpdate(
                     { _id: orderId },
-                    { $set: { orderAmount: newTotalOrderAmount, orderStatus: 'returned'} }
+                    { $set: { orderAmount: newTotalOrderAmount, orderStatus: 'return requested'} }
                 );
             }else{
                 await order.findOneAndUpdate(
                     { _id: orderId },
-                    { $set: { orderAmount: newTotalOrderAmount } }
+                    { $set: { orderAmount: newTotalOrderAmount , orderStatus:'return requested' } }
                 );
             }
 
@@ -631,7 +651,8 @@ const adminOrderHandler = async(req,res)=>{
                          await order.findOneAndUpdate({_id:ordId , 'products.productId':productId},{$set:{'products.$.orderProductStatus':'returned'}},{new:true});
                          await product.findOneAndUpdate({_id:productId},{$inc:{quantity:qty}});
                         }else{
-                            await order.findOneAndUpdate({_id:ordId , 'products.productId':productId},{$set:{'products.$.orderProductStatus':'pending'}},{new:true});
+                            await order.findOneAndUpdate({_id:ordId , 'products.productId':productId},{$set:{'products.$.orderProductStatus':'returned'}},{new:true});
+                            await product.findOneAndUpdate({_id:productId},{$inc:{quantity:qty}});
                         }
                     })
                 }
@@ -706,5 +727,6 @@ module.exports = {
     razorFailure,
     failedPaymentRetry,
     changeStatusRetry,
-    loadInvoice
+    loadInvoice,
+    loadConfirmation
 }

@@ -81,7 +81,23 @@
                         Add Money
                       </button>
 
-                      <% if (userWallet?.transaction.length >= 1) { %>
+                      <% if(locals.w) {%>
+
+                        <div class="wishlist-share">
+  
+                          <div class="social-icons social-icons-sm mb-2">
+  
+                            <label class="social-label text-primary">Total:</label>
+  
+                            <h3 class="text-success">$<%= w?.walletBalance %></h3>
+  
+                          </div><!-- End .soial-icons -->
+  
+                        </div>
+  
+                        <% } %>
+
+                      <% if (userWallet?.length >= 1) { %>
 
                       <table class="table table-wishlist table-mobile text-center" style="width: 920px">
 
@@ -98,7 +114,7 @@
 
                         </thead>
 
-                        <% userWallet?.transaction.forEach((element, index) => { %>
+                        <% userWallet?.forEach((element, index) => { %>
 
                         <tbody>
 
@@ -128,21 +144,7 @@
 
                       </table>
 
-                      <% if(locals.userWallet) {%>
-
-                      <div class="wishlist-share">
-
-                        <div class="social-icons social-icons-sm mb-2">
-
-                          <label class="social-label text-primary">Total:</label>
-
-                          <p class="text-primary ">$<%= userWallet?.walletBalance %></p>
-
-                        </div><!-- End .soial-icons -->
-
-                      </div>
-
-                      <% } %>
+                      
 
                       <% } else { %>
 
