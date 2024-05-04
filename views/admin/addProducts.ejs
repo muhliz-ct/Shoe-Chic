@@ -19,12 +19,12 @@
               <div class="form-group">
                 <label for="exampleInputName1">Product Name :</label>
                 <input type="text" class="form-control text-white" id="name" name="product" placeholder="Name">
-                <p id="name-error"></p>
+                <p class="text-danger" id="name-error"></p>
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail3">Product Price ($) :</label>
                 <input type="number" class="form-control text-white" id="price"  name="price" placeholder="Price">
-                <p id="price-error"></p>
+                <p class="text-danger" id="price-error"></p>
               </div>
               <div class="form-group">
                 <label for="exampleInputPassword4">Category :</label><br>
@@ -103,7 +103,7 @@
               <div class="form-group">
                 <label for="exampleInputCity1">Stock</label>
                 <input type="number" class="form-control" id="stock" name="stock" placeholder="stock">
-                <p id="stock-error"></p>
+                <p class="text-danger" id="stock-error"></p>
               </div>
               <label for="form-check">Status :</label>
               <div class="form-group d-flex" >
@@ -125,7 +125,7 @@
                 <textarea class="form-control text-white" name="description" id="description"  rows="4"></textarea>
                 <p id="desc-error"></p>                             
               </div>
-              <button type="submit" id="btn" class="btn btn-primary mr-2">Submit</button>
+              <button type="submit" onclick="validateForm()" id="btn11" class="btn btn-primary mr-2">Submit</button>
               <button class="btn btn-dark">Cancel</button>
             </form>
 
@@ -169,7 +169,7 @@
       e.preventDefault();
     }
   });
-  const msgP = document.getElementById(msgP);
+  const msgP = document.getElementById('msgP');
   const form = document.getElementById('myForm')
   const imgco = document.querySelector('.image')
   console.log(form);
@@ -233,9 +233,9 @@ function validateForm() {
     isValid = false;
   }
   // description 
-  const desc = document.getElementById('desc').value.trim()
+  const desc = document.getElementById('description').value.trim()
   if(desc ===''){
-    document.getElementById('msg-desc').textContent = 'plese fill this field'
+    document.getElementById('desc-error').textContent = 'plese fill this field'
     isValid = false;
   }
 
@@ -252,8 +252,10 @@ function validateForm() {
     isValid = false;
   }
 
+
+  console.log(isValid);
   // Button enable/disable based on validation
-  const submitButton = document.getElementById('btn');
+  const submitButton = document.getElementById('btn11');
   if (isValid) {
     submitButton.removeAttribute('disabled');
   } else {

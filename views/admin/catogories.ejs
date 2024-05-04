@@ -91,15 +91,17 @@
                                                     </button>
                                                   </div>
                                                   <div class="modal-body">
-                                                    <!-- Form for adding new category -->
-                                                    <form action="/admin/editCategory?currentName=<%= categoryData[i].categoryName %>" method="post">
+                                                    <!-- Form for editing existing category -->
+                                                    <form id="editCatogoryForm<%= i %>" action="/admin/editCategory?currentName=<%= categoryData[i].categoryName %>" method="post">
                                                       <div class="form-group">
                                                         <label for="categoryName">Category Name</label>
-                                                        <input type="text" name="category" class="form-control" id="categoryName" placeholder="<%= categoryData[i].categoryName %>">
+                                                        <input type="text" name="category" class="form-control" id="categoryName-2-<%= i %>" placeholder="<%= categoryData[i].categoryName %>" value="<%= categoryData[i].categoryName %>">
+                                                        <div class="error-message" id="invalid-name-error-2<%= i %>"></div>
                                                         <br>
                                                         <label for="categoryName">Catogory Discount</label>
-                                                        <input type="text" name="catDisc" class="form-control" id="categoryName" placeholder="<%= categoryData[i].categoryOffer %>">
-                                                        <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+                                                        <input type="number" name="catDisc" class="form-control" id="catogoryDiscount-2-<%= i %>" placeholder="<%= categoryData[i].categoryOffer %>" value="<%= categoryData[i].categoryOffer %>">
+                                                        <div class="error-message" id="invalid-discount-error-2<%= i %>"></div>
+                                                        <button type="button" onclick="formValidationEdit('<%= i %>')" class="btn btn-primary mt-3">Save changes</button>
                                                       </div>
                                                       <!-- Add more fields if needed -->
                                                       <!-- For example, description, etc. -->
@@ -163,14 +165,16 @@
       </div>
       <div class="modal-body">
         <!-- Form for adding new category -->
-        <form action="/admin/addCategory" method="post">
+        <form id="addCatogoryForm" action="/admin/addCategory" method="post">
           <div class="form-group">
             <label for="categoryName">Category Name</label>
-            <input type="text" name="category" class="form-control" id="categoryName" placeholder="Enter category name">
+            <input type="text" name="category" class="form-control" id="categoryName-1" placeholder="Enter category name">
+            <div class="error-message" id="invalid-name-error"></div>
             <br>
             <label for="categoryName">Category Discount Percentage (%)</label>
-            <input type="text" name="categoryDiscount" class="form-control" id="categoryName" placeholder="0">
-            <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+            <input type="number" name="categoryDiscount" class="form-control" id="catogoryDiscount" placeholder="0" value="0">
+            <div class="error-message" id="invalid-discount-error"></div>
+            <button type="button" onclick="formValidation()" class="btn btn-primary mt-3">Save changes</button>
           </div>
           <!-- Add more fields if needed -->
           <!-- For example, description, etc. -->
@@ -188,6 +192,92 @@
 <script>
   const s = document.getElementById('s')
   console.log(s.textContent);
+
+
+
+  function formValidation() {
+				var catogoryName = document.getElementById('categoryName-1').value;
+        console.log(catogoryName);
+				var catogoryDiscount = document.getElementById('catogoryDiscount').value;
+
+				//full name
+				if (catogoryName.trim() == '') {
+					
+					showError('Please enter a valid name', 'invalid-name-error');
+					return false;
+				
+				} else {
+				
+					clearError('invalid-name-error');
+			
+				}
+
+				
+
+				if (catogoryDiscount > 60 || catogoryDiscount < 0 ) {
+					
+					showError('Discount percentage cannot be greater than 60 and less than 0', 'invalid-discount-error');
+					
+					return false;
+				
+				} else {
+				
+					clearError('invalid-discount-error');
+			
+				}
+
+				// If all validations pass, submit the form
+				document.getElementById('addCatogoryForm').submit();
+			}
+
+      function formValidationEdit(i) {
+				var catogoryName = document.getElementById('categoryName-2-' + i).value;
+        console.log(catogoryName);
+				var catogoryDiscount = document.getElementById('catogoryDiscount-2-' + i).value;
+        console.log(catogoryDiscount);
+
+				//full name
+				if (catogoryName.trim() == '') {
+					
+					showError('Please enter a valid name', 'invalid-name-error-2'+i);
+					return false;
+				
+				} else {
+				
+					clearError('invalid-name-error-2'+i);
+			
+				}
+
+				
+
+				if (catogoryDiscount > 60 || catogoryDiscount < 0 || catogoryDiscount == '') {
+					
+					showError('Discount percentage cannot be greater than 60 and less than 0', 'invalid-discount-error-2'+i);
+					
+					return false;
+				
+				} else {
+				
+					clearError('invalid-discount-error-2'+i);
+			
+				}
+
+				// If all validations pass, submit the form
+				document.getElementById('editCatogoryForm' + i).submit();
+			}
+
+			function showError(message, errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = message;
+				errorElement.style.color = 'red'; // Set color to red
+			}
+
+			function clearError(errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = ''; // Clear error message
+			}
+
+
 </script>
 
 <%- include('../layouts/adminfooter.ejs') %>
