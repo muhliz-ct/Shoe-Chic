@@ -37,10 +37,12 @@ let sortTransactionsByTime = async function(walletId) {
 
 const loadWallet = async (req, res) => {
     try {
+
+        let sortedTransactions;
         const sessionUserId = req.session.user._id;
 
         // Fetching cart data
-        const cartData = await cart.findOne({ userId: req.session.user._id }).populate('products.productId');
+        const cartData = await cart.findOne({ userId: sessionUserId }).populate('products.productId');
 
         const wallet1 = await wallet.findOne({userId:sessionUserId})
 
@@ -49,13 +51,18 @@ const loadWallet = async (req, res) => {
 
         // Fetching user wallet data and sorting transactions
         const userWallet = await wallet.findOne({ userId: sessionUserId });
-        const sortedTransactions = await sortTransactionsByTime(userWallet._id);
+        console.log(userWallet);
+        if(userWallet){
+            sortedTransactions = await sortTransactionsByTime(userWallet._id);
+        }else{
+            sortedTransactions = null;
+        }
         console.log(sortedTransactions);
 
         res.render('wallet', {
             login: req.session.user,
             w:wallet1,
-            userWallet: sortedTransactions,
+            userWallet: sortedTransactions || null,
             categoryData: categoryData,
             cartData: cartData
         });

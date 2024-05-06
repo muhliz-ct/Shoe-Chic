@@ -97,7 +97,7 @@
   
                         <% } %>
 
-                      <% if (userWallet?.length >= 1) { %>
+                      <% if (!locals.userWallet == null || userWallet?.length >= 1) { %>
 
                       <table class="table table-wishlist table-mobile text-center" style="width: 920px">
 
