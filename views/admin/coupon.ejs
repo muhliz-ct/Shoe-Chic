@@ -66,6 +66,7 @@
                                 <div class="form-group">
                                     <label for="couponName">Coupon Name</label>
                                     <input type="text" class="form-control" name="couponName" id="couponName" required>
+                                    <div class="error-message" id="invalid-name-error"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="couponCode">Coupon Code</label>
@@ -73,7 +74,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="discount">Discount</label>
-                                    <input type="number" class="form-control" name="discount" id="discount" required>
+                                    <input type="number" class="form-control" name="discount" id="Coupon-discount" required>
+                                    <div class="error-message" id="invalid-discount-error"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="minPrice">Minimum Price</label>
@@ -87,7 +89,7 @@
                                     <label for="couponImage">Coupon Image</label>
                                     <input type="file" class="form-control-file" name="couponImage" id="couponImage" required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" onclick="formValidation1 ()" class="btn btn-primary">Submit</button>
                             </form>
                         </div>
                     </div>
@@ -171,6 +173,54 @@
         }
       })
     }
+
+
+
+    function formValidation1() {
+				var couponName = document.getElementById('couponName').value;
+        console.log('reached the function');
+				var couponDiscount = document.getElementById('Coupon-discount').value;
+
+				//full name
+				if (couponName.trim() == '') {
+					
+					showError('Please enter a valid name', 'invalid-name-error');
+					return false;
+				
+				} else {
+				
+					clearError('invalid-name-error');
+			
+				}
+
+				
+
+				if (couponDiscount > 60 || couponDiscount < 0 ) {
+					
+					showError('Discount percentage cannot be greater than 60 and less than 0', 'invalid-discount-error');
+					
+					return false;
+				
+				} else {
+				
+					clearError('invalid-discount-error');
+			
+				}
+
+				// If all validations pass, submit the form
+				document.getElementById('couponform').submit();
+			}
+
+      function showError(message, errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = message;
+				errorElement.style.color = 'red'; // Set color to red
+			}
+
+			function clearError(errorId) {
+				var errorElement = document.getElementById(errorId);
+				errorElement.textContent = ''; // Clear error message
+			}
 </script>
 
 
