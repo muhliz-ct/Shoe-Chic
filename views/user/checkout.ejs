@@ -228,7 +228,7 @@
 
 									<button type="button" class="btn btn-primary mt-3 justify-content-center " data-bs-toggle="modal" data-bs-target="#address" data-bs-whatever="@mdo">Add Address</button>
 
-									<div class="text-center text-info" style="margin-top: 20rem;"><p>Click The Add Address Button to Add Address</p></div><!--Message-->
+									<div class="text-center text-danger" style="margin-top: 20rem;"><p>Click The Add Address Button to Add Address</p></div><!--Message-->
 
 		                				<div class="row">
 
@@ -600,10 +600,17 @@
 									<% if (cartData?.products.length == 0) { %>
 										<a href="/product" class="btn btn-outline-primary-2 btn-order btn-block">ADD PRODUCT TO CART</a>
 									<% } else { %>
+										<% if (!locals.addres || locals.addres.address.length == 0) {%>
+											<button style="display: none;" type="button" class="btn btn-outline-primary-2 btn-order btn-block" onclick="placeOrder('<%= cartData.totalCartPrice %>','<%= cartData.userId %>')">
+												<span class="btn-text">Place Order</span>
+												<span class="btn-hover-text">Proceed to Checkout</span>
+											</button>
+										<%}else{%>
 										<button type="button" class="btn btn-outline-primary-2 btn-order btn-block" onclick="placeOrder('<%= cartData.totalCartPrice %>','<%= cartData.userId %>')">
 											<span class="btn-text">Place Order</span>
 											<span class="btn-hover-text">Proceed to Checkout</span>
 										</button>
+									<%} %>
 									<% } %>
 								</div>
 							</form>

@@ -82,12 +82,12 @@ const placeOrder = async (req, res) => {
     try {
         const sessionUserId = req.session.user._id;
         const paymentMethod = req.body.paymentmethod;
-        console.log(paymentMethod,);
         const catData = await category.find({is_listed:true})
         const userId = req.session.user._id;
 
         const cartData = await cart.findOne({ userId: userId });
         const userAddress = await address.findOne({ userId: userId, 'address.status': true });
+        const wallet = await wallet.findOne({userId:userId});
 
         if(paymentMethod == 'wallet'){
             const walletData = await wallet.findOne({userId:sessionUserId});
@@ -123,8 +123,6 @@ const placeOrder = async (req, res) => {
         });
 
         await newOrder.save();
-
-        console.log(newOrder);
 
        if(newOrder){
 
