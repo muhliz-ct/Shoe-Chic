@@ -154,7 +154,15 @@ const unblockUser = async(req,res)=>{
     }
 }
 
-
+const adminLogout = async(req,res)=>{
+    try {
+        req.session.destroy();
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error.message);
+        errorHandler(error, req, res);
+    }
+}
 module.exports = {
     adminLoginLoad,
     verifyAdmin,
@@ -162,4 +170,5 @@ module.exports = {
     adminUserListLoad,
     blockUser,
     unblockUser,
+    adminLogout
 }

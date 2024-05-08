@@ -66,7 +66,9 @@ adminRoute.post('/addCoupon',multer.upload.array('couponImage',1),couponControll
 adminRoute.post('/deleteCoupon',couponController.deleteCoupon);
 
 adminRoute.get('/salesReport/:id',reportController.loadReport);
-adminRoute.put('/customReport',reportController.customReport)
+adminRoute.put('/customReport',reportController.customReport);
+
+adminRoute.post('/logout',adminController.adminLogout);
 
 
 

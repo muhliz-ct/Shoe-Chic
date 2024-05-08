@@ -115,20 +115,24 @@ const editCategory = async(req,res)=>{
     try {
         // console.log(req.query.currentName);
         // console.log(req.body.category);
-        const currentCatogoryName = req.query.currentName;
+        const currentCatogoryName = req.query.currenName;
 
         const editedCategoryDiscount = req.body.catDisc;
-
+        
         console.log(editedCategoryDiscount);
 
         const editedCatogoryName = req.body.category.trim().toUpperCase();
 
-        const duplicateCategory = await category.findOne({categoryName:editedCatogoryName,categoryOffer:editedCategoryDiscount});
+        console.log(editedCatogoryName);
+
+        const duplicateCategory = await category.findOne({categoryName:editedCatogoryName});
+
+        console.log(duplicateCategory);
 
         const catData = await category.find({categoryName:{$exists:true}});
 
         if(duplicateCategory){
-
+            console.log('reached duplicate category');
             res.render('catogories',{duplicateCategoryMsg:'This category already exists',categoryData:catData});
 
         }
