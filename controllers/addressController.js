@@ -30,7 +30,7 @@ const saveAddress  = async(req,res)=>{
                 phone:req.body.addressData.phone,
                 city:req.body.addressData.city,
                 state:req.body.addressData.state,
-                pinconde:req.body.addressData.pinconde,
+                pincode:req.body.addressData.pincode,
                 address:req.body.addressData.address,
                 locality:req.body.addressData.locality,
                 status:true
@@ -91,7 +91,7 @@ const addAddress = async(req,res)=>{
                 pincode:req.body.addressData.pincode,
                 address:req.body.addressData.addresss,
                 locality:req.body.addressData.locality,
-                status:true
+                status:false
                 }}},
                 {new:true , upsert:true}
             )
